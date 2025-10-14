@@ -1,0 +1,39 @@
+{
+  "hosting": [
+    {
+      "site": "accizard-lucban",
+      "public": ".",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**",
+        "functions/**",
+        "*.md",
+        "*.bat",
+        "*.ps1",
+        "storage.rules"
+      ]
+    },
+    {
+      "site": "accizard-about-page",
+      "public": ".",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**",
+        "functions/**",
+        "*.md",
+        "*.bat",
+        "*.ps1",
+        "storage.rules"
+      ]
+    }
+  ],
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs18"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}
