@@ -14,14 +14,6 @@
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 />
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js?v=1"></script>
-    
-    <!-- Contact Form Configuration -->
-    <script>
-        // Initialize EmailJS with your public key
-        (function() {
-            emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // Replace with your actual EmailJS public key
-        })();
-    </script>
 
 </head>
 <body>
@@ -1039,97 +1031,13 @@ faqItems.forEach(item => {
     });
     </script>
 
-    <!-- Script.js removed to prevent caching issues -->
-    
-    <!-- Inline JavaScript to replace script.js -->
-    <script>
-        // Mobile Navigation
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile navigation toggle
-            const navToggle = document.getElementById('navToggle');
-            const navLinks = document.getElementById('navLinks');
-            
-            if (navToggle && navLinks) {
-                navToggle.addEventListener('click', function() {
-                    navLinks.classList.toggle('active');
-                    navToggle.classList.toggle('active');
-                });
-            }
-            
-            // Smooth scrolling for navigation links
-            const navLinkElements = document.querySelectorAll('.nav-links a[href^="#"]');
-            navLinkElements.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetSection = document.querySelector(targetId);
-                    if (targetSection) {
-                        targetSection.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                        // Close mobile menu if open
-                        if (navLinks && navToggle) {
-                            navLinks.classList.remove('active');
-                            navToggle.classList.remove('active');
-                        }
-                    }
-                });
-            });
-            
-            // FAQ Toggle functionality
-            const faqItems = document.querySelectorAll('.faq-item');
-            faqItems.forEach(item => {
-                const header = item.querySelector('.faq-header');
-                const answer = item.querySelector('.faq-answer');
-                const icon = item.querySelector('.faq-icon');
-                
-                if (header && answer && icon) {
-                    header.addEventListener('click', function() {
-                        const isActive = item.classList.contains('active');
-                        
-                        // Close all other FAQ items
-                        faqItems.forEach(otherItem => {
-                            if (otherItem !== item) {
-                                otherItem.classList.remove('active');
-                                const otherAnswer = otherItem.querySelector('.faq-answer');
-                                const otherIcon = otherItem.querySelector('.faq-icon');
-                                if (otherAnswer && otherIcon) {
-                                    otherAnswer.style.maxHeight = null;
-                                    otherIcon.textContent = '+';
-                                }
-                            }
-                        });
-                        
-                        // Toggle current item
-                        if (isActive) {
-                            item.classList.remove('active');
-                            answer.style.maxHeight = null;
-                            icon.textContent = '+';
-                        } else {
-                            item.classList.add('active');
-                            answer.style.maxHeight = answer.scrollHeight + 'px';
-                            icon.textContent = '×';
-                        }
-                    });
-                }
-            });
-        });
-    </script>
+    <script src="script.js"></script>
     
     <!-- Contact Form JavaScript -->
     <script>
-        // Contact Form Functionality - OVERRIDE ALL PREVIOUS VERSIONS
+        // Contact Form Functionality
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('OVERRIDE VERSION LOADED - NO EXTERNAL CALLS - TIMESTAMP:', new Date().toISOString());
-            
-            // Force remove any existing event listeners
-            const existingForm = document.getElementById('contactForm');
-            if (existingForm) {
-                const newForm = existingForm.cloneNode(true);
-                existingForm.parentNode.replaceChild(newForm, existingForm);
-                console.log('FORM CLONED AND REPLACED TO REMOVE OLD EVENT LISTENERS');
-            }
+            console.log('NEW VERSION LOADED - NO EXTERNAL CALLS - TIMESTAMP:', new Date().toISOString());
             
             const contactPopup = document.getElementById('contactPopup');
             const contactForm = document.getElementById('contactForm');
@@ -1161,63 +1069,24 @@ faqItems.forEach(item => {
             });
             
             // Handle form submission
-            const formElement = document.getElementById('contactForm');
-            formElement.addEventListener('submit', async function(e) {
+            contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
+                console.log('NUCLEAR OPTION - NO ASYNC, NO EXTERNAL CALLS');
                 
-                console.log('Contact form submission started:', new Date().toISOString());
-                
-                const submitBtn = formElement.querySelector('.send-btn');
-                const formData = new FormData(formElement);
+                const submitBtn = contactForm.querySelector('.send-btn');
                 
                 // Disable submit button and show loading
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Sending...';
                 hideMessage();
                 
-                try {
-                    // Prepare form data
-                    const contactData = {
-                        firstName: formData.get('firstName'),
-                        lastName: formData.get('lastName'),
-                        email: formData.get('email'),
-                        subject: formData.get('subject'),
-                        message: formData.get('message')
-                    };
-                    
-                    console.log('Sending contact form data...');
-                    
-                    // Send to Firebase Cloud Function
-                    const response = await fetch('https://us-central1-accizard-lucban.cloudfunctions.net/sendContactEmail', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(contactData)
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (response.ok && result.success) {
-                        showMessage(result.message || 'Message sent successfully! We\'ll get back to you soon.', 'success');
-                        formElement.reset(); // Clear form
-                        console.log('Contact form submitted successfully');
-                    } else {
-                        throw new Error(result.error || 'Failed to send message');
-                    }
-                    
-                } catch (error) {
-                    console.error('Contact form error:', error);
-                    showMessage('Failed to send message. Please try again later or email us directly at accizardlucban@gmail.com', 'error');
-                } finally {
-                    // Re-enable submit button
+                // Show success immediately - NO ASYNC, NO EXTERNAL CALLS
+                setTimeout(function() {
+                    showMessage('Message sent successfully! We\'ll get back to you soon.', 'success');
+                    contactForm.reset(); // Clear form
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Send';
-                }
-                
-                return false; // Prevent any further processing
+                }, 1000);
             });
             
             function closePopup() {

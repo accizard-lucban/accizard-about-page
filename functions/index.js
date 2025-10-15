@@ -15,6 +15,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const { getStorage } = require('firebase-admin/storage');
 const cors = require('cors')({ origin: true });
+const nodemailer = require('nodemailer');
 
 admin.initializeApp();
 
@@ -510,3 +511,94 @@ async function fetchNewsLogic() {
     timestamp: newsData.fetchedAt
   };
 }
+
+/**
+ * CONTACT FORM HANDLER
+ * Handles contact form submissions and stores them in Firestore
+ * For now, stores submissions and sends notification (email integration can be added later)
+ */
+exports.sendContactEmail = onRequest({
+  memory: '128MiB',
+  timeoutSeconds: 60,
+  cors: true
+}, async (req, res) => {
+  return cors(req, res, async () => {
+    try {
+      // Only allow POST requests
+      if (req.method !== 'POST') {
+        return res.status(405).json({
+          success: false,
+          error: 'Method not allowed. Use POST.'
+        });
+      }
+
+      console.log('📧 Contact form submission received');
+      
+      // Extract form data
+      const { firstName, lastName, email, subject, message } = req.body;
+      
+      // Validate required fields
+      if (!firstName || !lastName || !email || !subject || !message) {
+        return res.status(400).json({
+          success: false,
+          error: 'All fields are required'
+        });
+      }
+      
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          success: false,
+          error: 'Invalid email format'
+        });
+      }
+      
+      // Email functionality temporarily disabled - all submissions stored in Firestore
+      // To enable emails, you need to:
+      // 1. Enable 2-Step Verification on accizardlucban@gmail.com
+      // 2. Generate proper Gmail App Password (16 characters)
+      // 3. Update the password in this function
+      console.log('📧 Email notifications disabled - submission stored in Firestore only');
+      
+      // Store submission in Firestore for record keeping
+      const submissionData = {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim().toLowerCase(),
+        subject: subject.trim(),
+        message: message.trim(),
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        ipAddress: req.ip || 'unknown',
+        userAgent: req.get('User-Agent') || 'unknown',
+        status: 'new',
+        processed: false,
+        emailSent: false
+      };
+      
+      const docRef = await admin.firestore().collection('contact-submissions').add(submissionData);
+      console.log(`📝 Contact submission stored with ID: ${docRef.id}`);
+      
+      // Log submission details for monitoring
+      console.log(`✅ Contact form submission from: ${firstName} ${lastName} (${email})`);
+      console.log(`📋 Subject: ${subject}`);
+      console.log(`💬 Message preview: ${message.substring(0, 100)}...`);
+      
+      // Success response
+      res.status(200).json({
+        success: true,
+        message: 'Message sent successfully! We\'ll get back to you soon.',
+        submissionId: docRef.id
+      });
+      
+    } catch (error) {
+      console.error('❌ Contact form error:', error);
+      
+      res.status(500).json({
+        success: false,
+        error: 'Failed to send message. Please try again later.',
+        details: error.message
+      });
+    }
+  });
+});
