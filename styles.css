@@ -483,8 +483,8 @@ ul {
   margin-top: 60px;
   margin-left: auto;
   margin-right: auto;
-  max-width: 1100px;
-  padding: 0 40px;
+  max-width: 800px;
+  padding: 0 60px;
   flex-wrap: wrap; /* responsive */
 }
 
@@ -533,14 +533,9 @@ ul {
 /* Feature Grid */
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* changed from 3 to 4 columns */
-  gap: 30px;
+  grid-template-columns: repeat(5, 1fr); /* 5 columns for all features in one row */
+  gap: 20px;
   justify-items: center;
-}
-
-/* Remove this — it’s what pushed the last card down */
-.features-grid .feature-card:last-child {
-  grid-column: auto;
 }
 
 /* Feature Card */
@@ -705,14 +700,14 @@ ul {
 
 .screenshots-grid {
   display: flex;
-  gap: 20px;
+  gap: 60px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .video-card {
   position: relative;
-  width: 400px;
+  width: 480px;
   border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
@@ -726,7 +721,7 @@ ul {
 
 .video-card video {
   width: 100%;
-  height: 250px;
+  height: 300px;
   object-fit: cover;
   border-radius: 20px;
   transition: transform 0.3s ease;
@@ -902,7 +897,7 @@ ul {
 }
 
 .faq-item.active {
-  box-shadow: 0 0 0 2px #6c63ff;
+  box-shadow: 0 0 0 2px #8B0000;
 }
 
 .faq-question {
@@ -929,7 +924,7 @@ ul {
 
 .faq-icon {
   font-size: 1.5rem;
-  color: #6c63ff;
+  color: #8B0000;
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
@@ -939,6 +934,7 @@ ul {
 
 .faq-item.active .faq-icon {
   transform: rotate(45deg);
+  color: #8B0000;
 }
 
 .faq-answer {
