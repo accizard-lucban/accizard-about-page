@@ -385,9 +385,10 @@ ul {
 .section-title {
   text-align: center;
   font-size: 2.5rem;
+  font-weight: 800;
   color: #8B0000;
   margin-bottom: 1rem;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .section-subtitle {
@@ -480,6 +481,10 @@ ul {
   justify-content: space-between;
   gap: 40px;
   margin-top: 60px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1100px;
+  padding: 0 40px;
   flex-wrap: wrap; /* responsive */
 }
 
@@ -515,13 +520,7 @@ ul {
   padding: 80px 10%;
 }
 
-.section_features .section-title {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 10px;
-  color: #8B0000;
-  font-family: 'Poppins', sans-serif;
-}
+/* Using global .section-title */
 
 .section_features .section-subtitle {
   font-size: 1.2rem;
@@ -589,14 +588,7 @@ ul {
   padding: 80px 20px;
 }
 
-/* Title and Subtitle */
-.section-title {
-  font-size: 2rem;
-  font-weight: 800;
-  color: #8B0000;
-  margin-bottom: 10px;
-  font-family: 'Poppins', sans-serif;
-}
+/* Title and Subtitle - using global .section-title */
 
 .section-subtitle {
   font-size: 1.1rem;
@@ -720,7 +712,7 @@ ul {
 
 .video-card {
   position: relative;
-  width: 320px;
+  width: 400px;
   border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
@@ -734,7 +726,7 @@ ul {
 
 .video-card video {
   width: 100%;
-  height: 200px;
+  height: 250px;
   object-fit: cover;
   border-radius: 20px;
   transition: transform 0.3s ease;
@@ -901,7 +893,12 @@ ul {
   border-radius: 10px;
   box-shadow: 0 0 0 1px #eee;
   overflow: hidden;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, border 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.faq-item:hover {
+  border-color: #8B0000;
 }
 
 .faq-item.active {
@@ -933,7 +930,11 @@ ul {
 .faq-icon {
   font-size: 1.5rem;
   color: #6c63ff;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.faq-item:hover .faq-icon {
+  color: #8B0000;
 }
 
 .faq-item.active .faq-icon {
@@ -1047,14 +1048,7 @@ ul {
   100% { opacity: 1; }
 }
 
-.news-section .section-title {
-  text-align: center;
-  font-size: 2.5rem;
-  color: #8B0000;
-  margin-bottom: 1rem;
-  font-weight: 700;
-  font-family: 'Poppins', sans-serif;
-}
+/* Using global .section-title */
 
 .news-carousel {
   position: relative;
@@ -1495,6 +1489,12 @@ ul {
   .feature-card p {
     font-size: 0.9rem;
     line-height: 1.5;
+  }
+  
+  /* Mission & Vision Mobile */
+  .mission-vision {
+    padding: 0 20px;
+    gap: 30px;
   }
   
   .news-section {
