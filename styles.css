@@ -1829,22 +1829,22 @@ ul {
 
 .contact-popup.active {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding: 20px;
 }
 
 .contact-popup-content {
   background: white;
-  border-radius: 24px;
-  padding: 40px 40px 50px 40px;
+  border-radius: 20px;
+  padding: 30px 35px 40px 35px;
   width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow: hidden;
+  max-width: 550px;
   position: relative;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   animation: slideIn 0.3s ease;
   border: 3px solid #fb923c;
+  margin-top: 20px;
 }
 
 .contact-close-btn {
@@ -1873,22 +1873,22 @@ ul {
 .contact-popup-content h2 {
   text-align: center;
   color: #fb923c;
-  margin-bottom: 25px;
-  font-size: 1.4rem;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
   font-weight: 700;
   font-family: 'Poppins', sans-serif;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 #contactForm {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
 }
 
 .form-row {
   display: flex;
-  gap: 16px;
+  gap: 12px;
 }
 
 .form-group {
@@ -1900,8 +1900,8 @@ ul {
 .form-group label {
   font-weight: 500;
   color: #fb923c;
-  margin-bottom: 6px;
-  font-size: 0.8rem;
+  margin-bottom: 4px;
+  font-size: 0.75rem;
   font-family: 'Poppins', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1909,10 +1909,10 @@ ul {
 
 .form-group input,
 .form-group textarea {
-  padding: 14px 18px;
+  padding: 10px 14px;
   border: 2px solid #f0f0f0;
-  border-radius: 16px;
-  font-size: 0.95rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
   font-family: 'Poppins', sans-serif;
   transition: all 0.3s ease;
   background: #fafafa;
@@ -1934,9 +1934,9 @@ ul {
 
 .form-group textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 80px;
   font-family: 'Poppins', sans-serif;
-  padding-bottom: 60px; /* Make room for the send button */
+  padding-bottom: 50px; /* Make room for the send button */
 }
 
 .message-container {
@@ -1953,15 +1953,15 @@ ul {
   color: white;
   border: none;
   padding: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Poppins', sans-serif;
   position: absolute;
-  bottom: 15px;
-  right: 12px;
+  bottom: 12px;
+  right: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1982,8 +1982,8 @@ ul {
 }
 
 .send-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 .contact-message {
@@ -2030,11 +2030,12 @@ ul {
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .contact-popup-content {
-    padding: 30px 25px;
-    margin: 20px;
-    width: calc(100% - 40px);
-    border-radius: 20px;
-    max-width: 90vw;
+    padding: 25px 20px 40px 20px;
+    margin: 10px;
+    width: calc(100% - 20px);
+    border-radius: 16px;
+    max-width: calc(100vw - 20px);
+    margin-top: 10px;
   }
   
   .form-row {
@@ -2043,26 +2044,26 @@ ul {
   }
   
   .contact-popup-content h2 {
-    font-size: 1.3rem;
-    margin-bottom: 30px;
+    font-size: 1.1rem;
+    margin-bottom: 18px;
   }
   
   .form-group input,
   .form-group textarea {
-    padding: 14px 18px;
-    border-radius: 14px;
+    padding: 10px 14px;
+    border-radius: 12px;
   }
   
   .form-group textarea {
-    padding-bottom: 50px;
+    padding-bottom: 50px; /* Make room for the send button on mobile */
   }
   
   .send-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     bottom: 10px;
-    right: 10px;
+    right: 8px;
   }
   
   .send-btn svg {
