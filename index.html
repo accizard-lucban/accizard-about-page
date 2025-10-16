@@ -1190,7 +1190,7 @@ faqItems.forEach(item => {
                     console.log('Sending contact form data...');
                     
                     // Send to Firebase Cloud Function
-                    const response = await fetch('https://us-central1-accizard-lucban.cloudfunctions.net/sendContactEmail', {
+                    const response = await fetch('https://sendcontactemail-4hksadkxba-uc.a.run.app', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

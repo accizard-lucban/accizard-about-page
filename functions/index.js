@@ -554,12 +554,36 @@ exports.sendContactEmail = onRequest({
         });
       }
       
-      // Email functionality temporarily disabled - all submissions stored in Firestore
-      // To enable emails, you need to:
-      // 1. Enable 2-Step Verification on accizardlucban@gmail.com
-      // 2. Generate proper Gmail App Password (16 characters)
-      // 3. Update the password in this function
-      console.log('📧 Email notifications disabled - submission stored in Firestore only');
+      // Configure email transporter with Gmail App Password
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'accizardlucban@gmail.com',
+          pass: 'qtta bfzu ktjw pyag' // Google App Password
+        }
+      });
+      
+      // Email content
+      const mailOptions = {
+        from: 'accizardlucban@gmail.com',
+        to: 'accizardlucban@gmail.com',
+        subject: `Contact Form: ${subject}`,
+        html: `
+          <h2>New Contact Form Submission</h2>
+          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Subject:</strong> ${subject}</p>
+          <p><strong>Message:</strong></p>
+          <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            ${message.replace(/\n/g, '<br>')}
+          </div>
+          <p><strong>Timestamp:</strong> ${new Date().toLocaleString()}</p>
+          <p><strong>IP Address:</strong> ${req.ip || 'unknown'}</p>
+        `,
+        replyTo: email
+      };
+      
+      console.log('📧 Sending email notification...');
       
       // Store submission in Firestore for record keeping
       const submissionData = {
@@ -576,6 +600,21 @@ exports.sendContactEmail = onRequest({
         emailSent: false
       };
       
+      let emailSent = false;
+      let emailError = null;
+      
+      try {
+        // Send email notification
+        await transporter.sendMail(mailOptions);
+        console.log('✅ Email notification sent successfully');
+        emailSent = true;
+        submissionData.emailSent = true;
+      } catch (emailErr) {
+        console.error('❌ Failed to send email notification:', emailErr);
+        emailError = emailErr.message;
+        submissionData.emailError = emailErr.message;
+      }
+      
       const docRef = await admin.firestore().collection('contact-submissions').add(submissionData);
       console.log(`📝 Contact submission stored with ID: ${docRef.id}`);
       
@@ -584,11 +623,14 @@ exports.sendContactEmail = onRequest({
       console.log(`📋 Subject: ${subject}`);
       console.log(`💬 Message preview: ${message.substring(0, 100)}...`);
       
-      // Success response
+      // Success response (even if email fails, we still store the submission)
       res.status(200).json({
         success: true,
-        message: 'Message sent successfully! We\'ll get back to you soon.',
-        submissionId: docRef.id
+        message: emailSent 
+          ? 'Message sent successfully! We\'ll get back to you soon.'
+          : 'Message received and stored. Email notification may be delayed.',
+        submissionId: docRef.id,
+        emailSent: emailSent
       });
       
     } catch (error) {
