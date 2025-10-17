@@ -533,6 +533,80 @@ videoCards.forEach(card => {
         window.addEventListener('DOMContentLoaded', checkLanguagePreference);
     </script>
 
+    <!-- Daily Email Limit Management Script -->
+    <script>
+        // Daily Email Limit System
+        const DAILY_EMAIL_LIMIT = 450;
+        
+        function getTodayString() {
+            return new Date().toDateString();
+        }
+        
+        function getDailyEmailCount() {
+            const today = getTodayString();
+            const countData = localStorage.getItem('dailyEmailCount');
+            
+            if (!countData) {
+                return 0;
+            }
+            
+            try {
+                const parsed = JSON.parse(countData);
+                // If it's a new day, reset count
+                if (parsed.date !== today) {
+                    return 0;
+                }
+                return parsed.count || 0;
+            } catch (error) {
+                console.error('Error parsing daily email count:', error);
+                return 0;
+            }
+        }
+        
+        function incrementDailyEmailCount() {
+            const today = getTodayString();
+            const currentCount = getDailyEmailCount();
+            const newCount = currentCount + 1;
+            
+            const countData = {
+                date: today,
+                count: newCount
+            };
+            
+            localStorage.setItem('dailyEmailCount', JSON.stringify(countData));
+            return newCount;
+        }
+        
+        function checkEmailLimit() {
+            const currentCount = getDailyEmailCount();
+            return currentCount >= DAILY_EMAIL_LIMIT;
+        }
+        
+        function showLimitReachedPopup() {
+            const successPopup = document.getElementById('successPopup');
+            const successTitle = successPopup.querySelector('.success-title');
+            const successMessage = successPopup.querySelector('.success-message');
+            
+            // Update popup content for limit reached (Tagalog)
+            successTitle.textContent = 'Naabot na ang Limit sa Araw';
+            successMessage.textContent = 'Paumanhin, naabot na namin ang aming pang-araw-araw na limit sa email. Pakisubukan ulit bukas. Salamat sa inyong pag-unawa!';
+            
+            // Show the popup
+            successPopup.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function resetSuccessPopup() {
+            const successPopup = document.getElementById('successPopup');
+            const successTitle = successPopup.querySelector('.success-title');
+            const successMessage = successPopup.querySelector('.success-message');
+            
+            // Reset to original content (Tagalog)
+            successTitle.textContent = 'Tagumpay';
+            successMessage.textContent = 'Matagumpay na naipadala ang mensahe! Makikipag-ugnayan kami sa inyo sa lalong madaling panahon.';
+        }
+    </script>
+
     <script>
     // NewsData.io API Configuration
     const NEWS_API_KEY = 'pub_e50a94871c1640aaa68bf69837585a15';
@@ -1497,6 +1571,15 @@ videoCards.forEach(card => {
                 const submitBtn = formElement.querySelector('.send-btn');
                 const formData = new FormData(formElement);
                 
+                // Check daily email limit first
+                if (checkEmailLimit()) {
+                    console.log('Daily email limit reached, showing limit message');
+                    contactPopup.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                    showLimitReachedPopup();
+                    return false;
+                }
+                
                 // Disable submit button and show loading
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Sending...';
@@ -1526,6 +1609,10 @@ videoCards.forEach(card => {
                     const result = await response.json();
                     
                     if (response.ok && result.success) {
+                        // Increment daily email count only on successful send
+                        const newCount = incrementDailyEmailCount();
+                        console.log(`Email sent successfully. Daily count: ${newCount}/${DAILY_EMAIL_LIMIT}`);
+                        
                         // Close contact popup and show success popup
                         contactPopup.classList.remove('active');
                         document.body.style.overflow = 'auto';
@@ -1569,6 +1656,8 @@ videoCards.forEach(card => {
             // Success popup functionality
             function showSuccessPopup() {
                 const successPopup = document.getElementById('successPopup');
+                // Reset popup content to success message
+                resetSuccessPopup();
                 successPopup.classList.add('active');
                 document.body.style.overflow = 'hidden';
             }
