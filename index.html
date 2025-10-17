@@ -44,6 +44,7 @@
     <title>Accizard - Report Hazards. Save Lives. Stay Safe. (v2.0)</title>
     <link rel="stylesheet" href="styles.css?v=20241201">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -81,18 +82,12 @@
         </div>
     </div>
 
-    <!-- Header -->
-    <header class="header">
-        <nav class="nav">
-            <a href="#" class="logo">
-                <img src="2.png" alt="AcciZard Logo">
-            </a>
-            <div class="nav-toggle" id="navToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            <ul class="nav-links" id="navLinks">
+    <!-- Combined Navigation and Hero Section -->
+    <section class="nav-hero-section">
+        <!-- Navigation Bar -->
+        <nav class="nav-hero-nav">
+            <div class="nav-hero-container">
+                <ul class="nav-hero-links">
                 <li><a href="#about">About</a></li>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#how-it-works">How It Works</a></li>
@@ -100,18 +95,54 @@
                 <li><a href="#faq">FAQ</a></li>
                 <li><a href="#news">News</a></li>
             </ul>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-text">
-                <img src="3.png">
+                
+                <!-- Mobile Hamburger Menu -->
+                <div class="nav-hero-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
-            <div class="hero-mockup">
-                <img src="6.png" alt="Laptop Mockup" class="laptop">
-                <img src="5.png" alt="Phone Mockup" class="phone">
+        </nav>
+
+        <!-- Hero Content -->
+        <div class="nav-hero-content">
+            <div class="nav-hero-logo">
+                <div class="logo-icon">
+                    <img src="3.png" alt="AcciZard Logo">
+            </div>
+            </div>
+            
+            <p class="nav-hero-tagline">Report . Protect . Prevent</p>
+            
+            <div class="nav-hero-buttons">
+                <a href="#contact" class="nav-hero-btn">Contact Us</a>
+                <a href="#download-apk" class="nav-hero-btn">Download App</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Promotional Video Section -->
+    <section class="promotional-video-section">
+        <div class="promotional-video-container">
+            <div class="promotional-video-content">
+                <div class="promotional-video-text">
+                    <h2 class="promotional-video-title">AcciZard Lucban</h2>
+                    <p class="promotional-video-description">
+                        Your free, community-driven app for reporting accidents, hazards, and
+                        disasters in Lucban, Quezon. Whether you're a resident, tourist, or just
+                        passing by, help keep our town safe by reporting incidents in real time.
+                        Together, we can prevent accidents before they happen.
+                    </p>
+                </div>
+                <div class="promotional-video-player">
+                    <div class="video-player-wrapper">
+                        <video autoplay muted loop playsinline>
+                            <source src="tpv.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -140,12 +171,6 @@
       <p>
         Join us in building a resilient Lucban—report, track, and make a difference!
       </p>
-
-      <!-- Buttons -->
-      <div class="about-buttons">
-        <a href="#contact" class="btn primary-btn">Contact Us</a>
-        <a href="#download-apk" class="btn secondary-btn">Download the App</a>
-      </div>
     </div>
   </div>
     <!-- Mission & Vision Section -->
@@ -263,6 +288,13 @@
     <p class="section-subtitle">See Accizard in action</p>
 
     <div class="screenshots-grid">
+      <div class="image-card" data-carousel="true">
+        <img src="8.jpg" alt="AcciZard Feature Preview">
+        <div class="image-overlay">
+          <h3>See more...</h3>
+        </div>
+      </div>
+
       <div class="video-card" data-video="mobapp.mp4">
         <video src="mobapp.mp4" muted loop></video>
         <div class="video-overlay">
@@ -286,6 +318,45 @@
     <div class="video-popup-content">
       <span class="close-btn">&times;</span>
       <video controls autoplay></video>
+    </div>
+  </div>
+
+  <!-- Carousel Modal -->
+  <div class="carousel-popup">
+    <div class="carousel-popup-content">
+      <span class="carousel-close-btn">&times;</span>
+        <div class="carousel-container">
+          <button class="carousel-nav carousel-prev">
+            <img src="button.png" alt="Previous">
+          </button>
+          <div class="carousel-slides">
+            <div class="carousel-slide active" data-index="0">
+              <img src="8.jpg" alt="AcciZard Feature 1">
+            </div>
+            <div class="carousel-slide" data-index="1">
+              <img src="9.jpg" alt="AcciZard Feature 2">
+            </div>
+            <div class="carousel-slide" data-index="2">
+              <img src="10.jpg" alt="AcciZard Feature 3">
+            </div>
+            <div class="carousel-slide" data-index="3">
+              <img src="11.jpg" alt="AcciZard Feature 4">
+            </div>
+            <div class="carousel-slide" data-index="4">
+              <img src="12.jpg" alt="AcciZard Feature 5">
+            </div>
+          </div>
+          <button class="carousel-nav carousel-next">
+            <img src="button.png" alt="Next">
+          </button>
+        </div>
+      <div class="carousel-indicators">
+        <span class="indicator active" data-slide="0"></span>
+        <span class="indicator" data-slide="1"></span>
+        <span class="indicator" data-slide="2"></span>
+        <span class="indicator" data-slide="3"></span>
+        <span class="indicator" data-slide="4"></span>
+      </div>
     </div>
   </div>
 </section>
@@ -331,6 +402,175 @@ videoCards.forEach(card => {
     video.pause();
     video.currentTime = 0;
   });
+});
+
+// ========================================
+// CAROUSEL FUNCTIONALITY
+// ========================================
+
+// Carousel elements
+const imageCard = document.querySelector('.image-card[data-carousel="true"]');
+const carouselPopup = document.querySelector('.carousel-popup');
+const carouselCloseBtn = document.querySelector('.carousel-close-btn');
+const carouselSlides = document.querySelectorAll('.carousel-slide');
+const carouselPrev = document.querySelector('.carousel-prev');
+const carouselNext = document.querySelector('.carousel-next');
+const indicators = document.querySelectorAll('.indicator');
+
+let currentSlide = 0;
+let isTransitioning = false;
+
+// ========================================
+// CAROUSEL NAVIGATION FUNCTIONS
+// ========================================
+
+// Show specific slide with single image layout
+function showSlide(index) {
+  if (isTransitioning) return;
+  
+  isTransitioning = true;
+  
+  // Hide all slides first
+  carouselSlides.forEach((slide, i) => {
+    slide.classList.remove('active');
+    slide.style.opacity = '0';
+    slide.style.zIndex = '1';
+  });
+  
+  // Show the active slide
+  const activeSlide = carouselSlides[index];
+  if (activeSlide) {
+    activeSlide.classList.add('active');
+    activeSlide.style.opacity = '1';
+    activeSlide.style.zIndex = '2';
+  }
+  
+  // Update indicators
+  indicators.forEach((indicator, i) => {
+    indicator.classList.toggle('active', i === index);
+  });
+  
+  currentSlide = index;
+  
+  // Reset transition lock after animation
+  setTimeout(() => {
+    isTransitioning = false;
+  }, 600);
+}
+
+// Navigate to next slide
+function nextSlide() {
+  const next = (currentSlide + 1) % carouselSlides.length;
+  showSlide(next);
+}
+
+// Navigate to previous slide
+function prevSlide() {
+  const prev = (currentSlide - 1 + carouselSlides.length) % carouselSlides.length;
+  showSlide(prev);
+}
+
+// ========================================
+// EVENT LISTENERS
+// ========================================
+
+// Open carousel modal
+imageCard.addEventListener('click', () => {
+  carouselPopup.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  showSlide(0); // Initialize with first slide
+});
+
+// Close carousel modal
+carouselCloseBtn.addEventListener('click', () => {
+  carouselPopup.classList.remove('active');
+  document.body.style.overflow = 'auto';
+});
+
+// Close on background click
+carouselPopup.addEventListener('click', (e) => {
+  if (e.target === carouselPopup) {
+    carouselPopup.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+});
+
+// Navigation button events
+carouselNext.addEventListener('click', nextSlide);
+carouselPrev.addEventListener('click', prevSlide);
+
+// Indicator click events
+indicators.forEach((indicator, index) => {
+  indicator.addEventListener('click', () => {
+    showSlide(index);
+  });
+});
+
+// ========================================
+// TOUCH/SWIPE SUPPORT
+// ========================================
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+// Touch event handlers
+carouselPopup.addEventListener('touchstart', (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+carouselPopup.addEventListener('touchend', (e) => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+});
+
+// Handle swipe gestures
+function handleSwipe() {
+  const swipeThreshold = 50; // Minimum swipe distance
+  const swipeDistance = touchEndX - touchStartX;
+  
+  if (Math.abs(swipeDistance) > swipeThreshold) {
+    if (swipeDistance > 0) {
+      // Swipe right - go to previous slide
+      prevSlide();
+    } else {
+      // Swipe left - go to next slide
+      nextSlide();
+    }
+  }
+}
+
+// ========================================
+// KEYBOARD NAVIGATION
+// ========================================
+
+document.addEventListener('keydown', (e) => {
+  if (carouselPopup.classList.contains('active')) {
+    switch(e.key) {
+      case 'ArrowRight':
+        e.preventDefault();
+        nextSlide();
+        break;
+      case 'ArrowLeft':
+        e.preventDefault();
+        prevSlide();
+        break;
+      case 'Escape':
+        e.preventDefault();
+        carouselPopup.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        break;
+    }
+  }
+});
+
+// ========================================
+// INITIALIZATION
+// ========================================
+
+// Initialize carousel on page load
+document.addEventListener('DOMContentLoaded', () => {
+  // Ensure all slides start in correct positions
+  showSlide(0);
 });
 </script>
 
@@ -1507,7 +1747,7 @@ videoCards.forEach(card => {
                                 const otherAnswer = otherItem.querySelector('.faq-answer');
                                 const otherIcon = otherItem.querySelector('.faq-icon');
                                 if (otherAnswer && otherIcon) {
-                                    otherAnswer.style.maxHeight = null;
+                                    otherAnswer.style.maxHeight = '0px';
                                     otherIcon.textContent = '+';
                                 }
                             }
@@ -1516,11 +1756,17 @@ videoCards.forEach(card => {
                         // Toggle current item
                         if (isActive) {
                             item.classList.remove('active');
-                            answer.style.maxHeight = null;
+                            answer.style.maxHeight = '0px';
                             icon.textContent = '+';
                         } else {
                             item.classList.add('active');
-                            answer.style.maxHeight = answer.scrollHeight + 'px';
+                            // Calculate the actual height needed
+                            answer.style.maxHeight = 'none';
+                            const height = answer.scrollHeight;
+                            answer.style.maxHeight = '0px';
+                            // Force reflow
+                            answer.offsetHeight;
+                            answer.style.maxHeight = height + 'px';
                             icon.textContent = '×';
                         }
                     });
@@ -1549,7 +1795,7 @@ videoCards.forEach(card => {
             const contactMessage = document.getElementById('contactMessage');
             
             // Open popup when Contact Us button is clicked
-            document.querySelector('.primary-btn[href="#contact"]')?.addEventListener('click', function(e) {
+            document.querySelector('.nav-hero-btn[href="#contact"]')?.addEventListener('click', function(e) {
                 e.preventDefault();
                 contactPopup.classList.add('active');
                 document.body.style.overflow = 'hidden'; // Prevent background scrolling

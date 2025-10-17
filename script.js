@@ -5,9 +5,9 @@ console.log('Script.js loaded successfully');
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing News Manager...');
     
-    // Mobile navigation toggle
+    // Mobile navigation toggle for new nav-hero structure
     const navToggle = document.getElementById('navToggle');
-    const navLinks = document.getElementById('navLinks');
+    const navLinks = document.querySelector('.nav-hero-links');
     
     if (navToggle && navLinks) {
         console.log('NavToggle found:');
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Smooth scrolling for navigation links
 document.addEventListener('DOMContentLoaded', function() {
-    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+    const navLinks = document.querySelectorAll('.nav-hero-links a[href^="#"]');
     
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 
                 // Close mobile menu if open
-                const navLinksElement = document.getElementById('navLinks');
+                const navLinksElement = document.querySelector('.nav-hero-links');
                 const navToggle = document.getElementById('navToggle');
                 if (navLinksElement && navToggle) {
                     navLinksElement.classList.remove('active');
