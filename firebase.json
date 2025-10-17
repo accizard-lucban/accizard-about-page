@@ -26,6 +26,16 @@
         "*.bat",
         "*.ps1",
         "storage.rules"
+      ],
+      "rewrites": [
+        {
+          "source": "/tagalog",
+          "destination": "/index_tagalog.html"
+        },
+        {
+          "source": "/",
+          "destination": "/index.html"
+        }
       ]
     }
   ],

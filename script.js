@@ -188,3 +188,4 @@ document.addEventListener('DOMContentLoaded', function() {
 console.log('Script.js initialization complete');
 
 
+
