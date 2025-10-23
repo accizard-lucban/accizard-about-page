@@ -43,8 +43,7 @@
     
     <title>Accizard - Mag-ulat ng Panganib. Makaligtas ng Buhay. Manatiling Ligtas. (v2.0)</title>
     <link rel="stylesheet" href="styles.css?v=20241201">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/okta-neue" rel="stylesheet">
     <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -82,12 +81,93 @@
         </div>
     </div>
 
+    <!-- Mobile/Desktop Floating Hamburger Menu -->
+    <div id="floatingMenu" style="
+        position: fixed !important;
+        top: 20px !important;
+        right: 20px !important;
+        width: 50px !important;
+        height: 50px !important;
+        background: rgba(249, 115, 22, 0.5) !important;
+        border-radius: 50% !important;
+        display: none !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        cursor: pointer !important;
+        z-index: 9999 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transition: all 0.3s ease !important;
+        border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    ">
+        <div style="width: 20px; height: 2px; background: white; margin: 2px 0; border-radius: 1px;"></div>
+        <div style="width: 20px; height: 2px; background: white; margin: 2px 0; border-radius: 1px;"></div>
+        <div style="width: 20px; height: 2px; background: white; margin: 2px 0; border-radius: 1px;"></div>
+    </div>
+
+    <!-- Floating Dropdown Menu - Outside all containers for proper fixed positioning -->
+    <ul id="navLinks" style="
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: none;
+        flex-direction: column;
+        list-style: none;
+        margin: 0;
+        padding: 8px;
+        width: 280px;
+        background: #f97316;
+        border-radius: 12px;
+        gap: 0;
+    ">
+        <li style="width: 100%; margin: 2px 0;">
+            <a href="#about" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-size: 0.95rem; border-radius: 8px; color: white; text-decoration: none; transition: all 0.2s ease; font-weight: 500;">
+                Tungkol
+                <span style="font-size: 16px;">ⓘ</span>
+            </a>
+        </li>
+        <li style="width: 100%; margin: 2px 0;">
+            <a href="#features" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-size: 0.95rem; border-radius: 8px; color: white; text-decoration: none; transition: all 0.2s ease; font-weight: 500;">
+                Katangian
+                <span style="font-size: 16px;">⚙</span>
+            </a>
+        </li>
+        <li style="width: 100%; margin: 2px 0;">
+            <a href="#how-it-works" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-size: 0.95rem; border-radius: 8px; color: white; text-decoration: none; transition: all 0.2s ease; font-weight: 500;">
+                Paano Gumagana
+                <span style="font-size: 16px; color: white; filter: grayscale(100%) brightness(2);">⚡</span>
+            </a>
+        </li>
+        <li style="width: 100%; margin: 2px 0;">
+            <a href="#screenshots" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-size: 0.95rem; border-radius: 8px; color: white; text-decoration: none; transition: all 0.2s ease; font-weight: 500;">
+                Demo
+                <span style="font-size: 16px;">▶</span>
+            </a>
+        </li>
+        <li style="width: 100%; margin: 2px 0;">
+            <a href="#faq" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-size: 0.95rem; border-radius: 8px; color: white; text-decoration: none; transition: all 0.2s ease; font-weight: 500;">
+                FAQ
+                <span style="font-size: 16px;">?</span>
+            </a>
+        </li>
+        <li style="width: 100%; margin: 2px 0;">
+            <a href="#news" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-size: 0.95rem; border-radius: 8px; color: white; text-decoration: none; transition: all 0.2s ease; font-weight: 500;">
+                Balita
+                <span style="font-size: 16px; color: white; filter: grayscale(100%) brightness(2);">📢</span>
+            </a>
+        </li>
+    </ul>
+
     <!-- Combined Navigation and Hero Section -->
     <section class="nav-hero-section">
         <!-- Navigation Bar -->
         <nav class="nav-hero-nav">
             <div class="nav-hero-container">
-                <ul class="nav-hero-links">
+                <ul class="nav-hero-links-desktop" id="navLinksDesktop">
                     <li><a href="#about">Tungkol</a></li>
                     <li><a href="#features">Katangian</a></li>
                     <li><a href="#how-it-works">Paano Gumagana</a></li>
@@ -95,13 +175,6 @@
                     <li><a href="#faq">FAQ</a></li>
                     <li><a href="#news">Balita</a></li>
                 </ul>
-                
-                <!-- Mobile Hamburger Menu -->
-                <div class="nav-hero-toggle" id="navToggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
             </div>
         </nav>
 
@@ -122,40 +195,10 @@
         </div>
     </section>
 
-    <!-- Promotional Video Section -->
-    <section class="promotional-video-section">
-        <div class="promotional-video-container">
-            <div class="promotional-video-content">
-                <div class="promotional-video-text">
-                    <h2 class="promotional-video-title">AcciZard Lucban</h2>
-                    <p class="promotional-video-description">
-                        Ang inyong libre, komunidad na pinapatakbo na app para sa pag-uulat ng mga aksidente, panganib, at
-                        mga kalamidad sa Lucban, Quezon. Maging residente, turista, o dumadaan lamang,
-                        tulungan ninyong panatilihing ligtas ang aming bayan sa pamamagitan ng pag-uulat ng mga insidente sa real time.
-                        Sama-sama, maiiwasan natin ang mga aksidente bago pa mangyari.
-                    </p>
-                </div>
-                <div class="promotional-video-player">
-                    <div class="video-player-wrapper">
-                        <video autoplay muted loop playsinline>
-                            <source src="tpv.mp4" type="video/mp4">
-                            Hindi sinusuportahan ng inyong browser ang video tag.
-                        </video>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- About Section -->
 <section id="about" class="about-section">
   <div class="about-container">
-    <!-- Left side logo -->
-    <div class="about-logo">
-      <img src="accizard-favicon-circle.png" alt="Accizard Logo">
-    </div>
-
-    <!-- Right side content -->
+    <!-- Left side content -->
     <div class="about-text">
       <h2>TUNGKOL SA ACCIZARD</h2>
       <p>
@@ -167,6 +210,16 @@
       <p>
         Sama-sama nating buuin ang matatag na Lucban — mag-ulat, subaybayan, at maging daan sa pagbabago!
       </p>
+    </div>
+
+    <!-- Right side video -->
+    <div class="about-video">
+      <div class="video-player-wrapper">
+        <video autoplay muted loop playsinline>
+          <source src="tpv.mp4" type="video/mp4">
+          Hindi sinusuportahan ng inyong browser ang video tag.
+        </video>
+      </div>
     </div>
   </div>
     <!-- Mission & Vision Section -->
@@ -1759,6 +1812,128 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
             });
+        });
+        
+        // Smart hamburger menu functionality - Mobile/Desktop with scroll detection
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing smart hamburger menu...');
+            
+            const floatingMenu = document.getElementById('floatingMenu');
+            const navHeroNav = document.querySelector('.nav-hero-nav');
+            
+            if (floatingMenu) {
+                console.log('Floating menu found and ready!');
+                
+                // Check if device is mobile
+                function isMobile() {
+                    return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                }
+                
+                // Show/hide hamburger based on device and scroll position
+                function updateHamburgerVisibility() {
+                    if (isMobile()) {
+                        // Always show on mobile
+                        floatingMenu.style.display = 'flex';
+                        console.log('Mobile device - showing hamburger');
+                    } else {
+                        // Desktop: never show hamburger
+                        floatingMenu.style.display = 'none';
+                        console.log('Desktop - hiding hamburger completely');
+                    }
+                }
+                
+                // Update hamburger appearance based on background
+                function updateHamburgerAppearance() {
+                    const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+                    const aboutSection = document.querySelector('.about-section');
+                    
+                    // Check if we're in white background sections (about section and beyond)
+                    const isInWhiteSection = aboutSection && scrollY >= (aboutSection.offsetTop - 100);
+                    
+                    if (isInWhiteSection) {
+                        // White background sections - orange circular background
+                        floatingMenu.style.background = '#f97316';
+                        floatingMenu.style.border = '2px solid rgba(255, 255, 255, 0.5)';
+                        floatingMenu.style.boxShadow = '0 4px 12px rgba(249, 115, 22, 0.3)';
+                        console.log('White section - orange background at scroll:', scrollY);
+                    } else {
+                        // Orange background sections - orange with 50% opacity
+                        floatingMenu.style.background = 'rgba(249, 115, 22, 0.5)';
+                        floatingMenu.style.border = '2px solid rgba(255, 255, 255, 0.3)';
+                        floatingMenu.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+                        console.log('Orange section - orange background at scroll:', scrollY);
+                    }
+                }
+                
+                // Combined scroll handler
+                function handleScroll() {
+                    updateHamburgerVisibility();
+                    updateHamburgerAppearance();
+                    
+                    // Reposition dropdown if it's open
+                    positionDropdown();
+                }
+                
+                // Function to position dropdown relative to hamburger
+                function positionDropdown() {
+                    const navLinks = document.getElementById('navLinks');
+                    if (navLinks && navLinks.style.display === 'flex') {
+                        const menuRect = floatingMenu.getBoundingClientRect();
+                        
+                        // Position dropdown relative to hamburger
+                        navLinks.style.position = 'fixed';
+                        navLinks.style.top = (menuRect.bottom + 10) + 'px';
+                        navLinks.style.right = '20px';
+                        navLinks.style.zIndex = '10000';
+                        
+                        console.log('Dropdown repositioned at:', navLinks.style.top, 'hamburger at:', menuRect.top);
+                    }
+                }
+                
+                // Add click handler
+                floatingMenu.addEventListener('click', function() {
+                    console.log('Floating menu clicked');
+                    const navLinks = document.getElementById('navLinks');
+                    if (navLinks) {
+                        if (navLinks.style.display === 'flex') {
+                            navLinks.style.display = 'none';
+                        } else {
+                            // Position dropdown relative to hamburger
+                            const menuRect = floatingMenu.getBoundingClientRect();
+                            
+                            navLinks.style.position = 'fixed';
+                            navLinks.style.top = (menuRect.bottom + 10) + 'px';
+                            navLinks.style.right = '20px';
+                            navLinks.style.zIndex = '10000';
+                            navLinks.style.display = 'flex';
+                            
+                            console.log('Dropdown positioned at:', navLinks.style.top, 'hamburger at:', menuRect.top);
+                        }
+                    }
+                });
+                
+                // Listen for scroll and resize events
+                window.addEventListener('scroll', handleScroll);
+                window.addEventListener('resize', handleScroll);
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(event) {
+                    const navLinks = document.getElementById('navLinks');
+                    if (navLinks && navLinks.style.display === 'flex' && 
+                        !floatingMenu.contains(event.target) && 
+                        !navLinks.contains(event.target)) {
+                        navLinks.style.display = 'none';
+                        console.log('Dropdown closed by clicking outside');
+                    }
+                });
+                
+                // Initial check
+                handleScroll();
+                
+                console.log('Smart hamburger menu functionality initialized');
+            } else {
+                console.error('Floating menu not found!');
+            }
         });
     </script>
     

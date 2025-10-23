@@ -73,13 +73,13 @@ html, body {
   font-weight: 700;
   color: #1f2937;
   margin-bottom: 10px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .language-popup-header p {
   font-size: 1.1rem;
   color: #666;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .language-options {
@@ -123,7 +123,7 @@ html, body {
   font-size: 1.3rem;
   font-weight: 600;
   color: #1f2937;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   transition: color 0.3s ease;
 }
 
@@ -232,7 +232,7 @@ html {
 
 html {
   width: 100%;
-  height: 100%;
+  height: auto;
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -240,9 +240,11 @@ html {
 
 body {
   width: 100%;
-  height: 100%;
+  height: auto;
+  min-height: 100vh;
   overflow-x: hidden;
-  font-family: 'Poppins', sans-serif;
+  overflow-y: auto;
+  font-family: 'Okta Neue', sans-serif;
   line-height: 1.6;
   color: var(--dark);
   background: white;
@@ -551,7 +553,7 @@ ul {
 .nav-hero-links li a {
   color: white;
   text-decoration: none;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   font-weight: 500;
   font-size: 1rem;
   transition: all 0.3s ease;
@@ -592,7 +594,7 @@ ul {
 .nav-hero-links-desktop li a {
   color: white;
   text-decoration: none;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   font-weight: 500;
   font-size: 1rem;
   transition: all 0.3s ease;
@@ -710,7 +712,7 @@ ul {
 
 /* Tagline */
 .nav-hero-tagline {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   font-size: 2rem;
   font-weight: 700;
   margin: 0 0 40px 0;
@@ -734,7 +736,7 @@ ul {
   padding: 12px 24px;
   text-decoration: none;
   border-radius: 8px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
   text-transform: uppercase;
@@ -757,6 +759,7 @@ ul {
     margin: 0 !important;
     padding: 0 !important;
     overflow-x: hidden;
+    overflow-y: auto;
   }
   
   .nav-hero-section {
@@ -1201,7 +1204,7 @@ ul {
   font-weight: 800;
   color: #f97316;
   margin-bottom: 20px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   line-height: 1.2;
 }
 
@@ -1210,7 +1213,7 @@ ul {
   color: #374151;
   line-height: 1.6;
   margin-bottom: 30px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .hero-buttons {
@@ -1226,7 +1229,7 @@ ul {
   border-radius: 6px; /* Smaller border radius */
   text-decoration: none;
   transition: all 0.3s ease;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   height: 36px; /* Precise fixed height to ensure both buttons are exactly same size */
   display: flex;
   align-items: center;
@@ -1394,7 +1397,7 @@ ul {
   font-weight: 400;
   color: #f97316;
   margin-bottom: 1rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .section-subtitle {
@@ -1403,7 +1406,7 @@ ul {
   margin-bottom: 3rem;
   font-size: 1.2rem;
   font-weight: 400;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 /* Mobile Responsiveness for Section Subtitle */
@@ -1419,27 +1422,45 @@ ul {
   padding: 60px 2rem;
   background: white;
   color: #333;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .about-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 50px;
   flex-wrap: wrap; /* responsive */
-}
-
-.about-logo img {
-  width: 320px;
-  height: 320px;
-  object-fit: cover;
-  border-radius: 50%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .about-text {
   flex: 1;
   max-width: 550px;
+  order: 1;
+}
+
+.about-video {
+  flex: 1;
+  max-width: 600px;
+  order: 2;
+}
+
+.about-video .video-player-wrapper {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.about-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
 }
 
 .about-text h2 {
@@ -1447,14 +1468,14 @@ ul {
   font-weight: 400;
   color: #f97316;
   margin-bottom: 15px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .about-text p {
   font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 15px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   text-align: left;
   color: #64748b;
 }
@@ -1463,8 +1484,38 @@ ul {
   margin-top: 20px;
 }
 
-/* Mobile button spacing */
+/* Mobile responsiveness for About section */
 @media (max-width: 768px) {
+  .about-container {
+    flex-direction: column;
+    gap: 30px;
+    padding: 0 1rem;
+  }
+  
+  .about-text {
+    order: 2;
+    max-width: 100%;
+  }
+  
+  .about-video {
+    order: 1;
+    max-width: 100%;
+  }
+  
+  .about-video .video-player-wrapper {
+    height: 300px;
+  }
+  
+  .about-text h2 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  
+  .about-text p {
+    font-size: 0.95rem;
+    text-align: center;
+  }
+  
   .about-buttons {
     display: flex;
     flex-direction: column;
@@ -1492,7 +1543,7 @@ ul {
   font-weight: bold;
   font-size: 0.9rem;
   transition: 0.3s ease;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .primary-btn {
@@ -1538,13 +1589,13 @@ ul {
   font-weight: 400;
   color: #f97316;
   margin-bottom: 12px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .mission p, .vision p {
   font-size: 1rem;
   line-height: 1.6;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   text-align: left;
   color: #64748b;
 }
@@ -1611,7 +1662,7 @@ ul {
   justify-content: center;
   font-size: 1.1rem;
   font-weight: bold;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .feature-card:hover {
@@ -1633,7 +1684,7 @@ ul {
   font-weight: 700;
   color: black;
   margin-bottom: 14px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.4px;
   line-height: 1.2;
@@ -1644,7 +1695,7 @@ ul {
   font-size: 0.8rem;
   line-height: 1.4;
   color: #666;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
@@ -1690,7 +1741,7 @@ ul {
   justify-content: center;
   margin: 0 auto 25px;
   transition: all 0.3s ease;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   cursor: pointer;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -1708,7 +1759,7 @@ ul {
   font-weight: 700;
   color: #fb923c;
   margin-bottom: 12px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -1720,7 +1771,7 @@ ul {
   line-height: 1.5;
   max-width: 220px;
   margin: 0 auto;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 /* Arrow Connectors */
@@ -1836,7 +1887,7 @@ ul {
 .video-overlay h3 {
   font-size: 1.2rem;
   margin-bottom: 10px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .play-btn {
@@ -1906,7 +1957,7 @@ ul {
 .image-overlay h3 {
   font-size: 1.2rem;
   margin-bottom: 10px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   text-align: center;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
@@ -2368,7 +2419,7 @@ ul {
   font-weight: 700;
   color: #1c1c1c;
   line-height: 1.2;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .faq-header h2 span {
@@ -2379,7 +2430,7 @@ ul {
   margin-top: 15px;
   color: #666;
   max-width: 400px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .faq-container {
@@ -2422,7 +2473,7 @@ ul {
   align-items: center;
   cursor: pointer;
   transition: background 0.2s ease;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .faq-question:hover {
@@ -2452,7 +2503,7 @@ ul {
   line-height: 1.6;
   padding: 0 20px;
   transition: max-height 0.3s ease, padding 0.3s ease;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .faq-item.active .faq-answer {
@@ -2470,7 +2521,7 @@ ul {
   padding: 8px 16px;
   border-radius: 8px;
   transition: all 0.3s ease;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .download-link:hover {
@@ -2736,7 +2787,7 @@ ul {
   text-transform: uppercase;
   width: fit-content;
   margin-bottom: 15px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .news-title {
@@ -2745,7 +2796,7 @@ ul {
   color: #1f2937;
   margin-bottom: 10px;
   line-height: 1.4;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   word-wrap: break-word;
   white-space: normal;
   overflow: visible;
@@ -2774,7 +2825,7 @@ ul {
   unicode-bidi: embed;
   display: block;
   width: 100%;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .news-description::-webkit-scrollbar {
@@ -2810,7 +2861,7 @@ ul {
   margin-bottom: 10px;
   text-align: left;
   font-weight: 600;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .see-more-btn:hover {
@@ -2829,7 +2880,7 @@ ul {
 .news-time {
   color: #999;
   font-size: 0.9rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .news-link {
@@ -2841,7 +2892,7 @@ ul {
   font-weight: 600;
   font-size: 0.9rem;
   transition: all 0.3s ease;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .news-link:hover {
@@ -3444,7 +3495,7 @@ ul {
   margin-bottom: 20px;
   font-size: 1.2rem;
   font-weight: 700;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   letter-spacing: 0.5px;
 }
 
@@ -3470,7 +3521,7 @@ ul {
   color: #475569;
   margin-bottom: 4px;
   font-size: 0.75rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -3481,7 +3532,7 @@ ul {
   border: 2px solid #f0f0f0;
   border-radius: 12px;
   font-size: 0.85rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   transition: all 0.3s ease;
   background: #fafafa;
   color: #475569;
@@ -3503,7 +3554,7 @@ ul {
 .form-group textarea {
   resize: vertical;
   min-height: 80px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   padding-bottom: 50px; /* Make room for the send button */
 }
 
@@ -3526,7 +3577,7 @@ ul {
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   position: absolute;
   bottom: 12px;
   right: 10px;
@@ -3561,7 +3612,7 @@ ul {
   border-radius: 8px;
   text-align: center;
   font-weight: 600;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   display: none;
 }
 
@@ -3646,7 +3697,7 @@ ul {
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 15px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .success-message {
@@ -3654,7 +3705,7 @@ ul {
   font-size: 0.95rem;
   line-height: 1.5;
   margin-bottom: 25px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .success-close-btn {
@@ -3667,7 +3718,7 @@ ul {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .success-close-btn:hover {
@@ -3726,7 +3777,7 @@ ul {
   background: linear-gradient(to top, #f97316, rgba(255, 79, 11, 1));
   padding: 3rem 2rem;
   color: #ffffff;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .footer-content {
@@ -3739,14 +3790,14 @@ ul {
 .footer-section h3 {
   color: #ffffff;
   margin-bottom: 1rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .footer a {
   display: block;
   margin-bottom: 0.5rem;
   color: #ffffff;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   width: fit-content;
 }
 
@@ -3773,7 +3824,7 @@ ul {
   font-size: 0.9rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 1rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
 }
 
 .social-links {
@@ -3840,7 +3891,7 @@ ul {
 }
 
 .promotional-video-title {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   font-size: 1.8rem;
   font-weight: 400;
   color: #f97316;
@@ -3850,7 +3901,7 @@ ul {
 }
 
 .promotional-video-description {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Okta Neue', sans-serif;
   font-size: 1rem;
   color: #64748b;
   line-height: 1.6;
@@ -3960,8 +4011,9 @@ ul {
 html {
   margin: 0 !important;
   padding: 0 !important;
-  height: 100% !important;
+  min-height: 100vh !important;
   overflow-x: hidden !important;
+  overflow-y: auto !important;
   -webkit-text-size-adjust: 100% !important;
   -ms-text-size-adjust: 100% !important;
 }
@@ -3969,8 +4021,9 @@ html {
 body {
   margin: 0 !important;
   padding: 0 !important;
-  height: 100% !important;
+  min-height: 100vh !important;
   overflow-x: hidden !important;
+  overflow-y: auto !important;
   position: relative !important;
   top: 0 !important;
   left: 0 !important;
@@ -3995,8 +4048,9 @@ body {
   html, body {
     margin: 0 !important;
     padding: 0 !important;
-    height: 100% !important;
+    min-height: 100vh !important;
     overflow-x: hidden !important;
+    overflow-y: auto !important;
     position: relative !important;
     top: 0 !important;
     left: 0 !important;

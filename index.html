@@ -43,8 +43,7 @@
     
     <title>Accizard - Report Hazards. Save Lives. Stay Safe. (v2.0)</title>
     <link rel="stylesheet" href="styles.css?v=20241201">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/okta-neue" rel="stylesheet">
     <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -128,37 +127,37 @@
         <li style="width: 100%; margin: 2px 0;">
             <a href="#about" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-size: 0.95rem; border-radius: 8px; color: white; text-decoration: none; transition: all 0.2s ease; font-weight: 500;">
                 About
-                <span style="font-size: 14px;">⚙️</span>
+                <span style="font-size: 16px;">ⓘ</span>
             </a>
         </li>
         <li style="width: 100%; margin: 2px 0;">
             <a href="#features" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-size: 0.95rem; border-radius: 8px; color: white; text-decoration: none; transition: all 0.2s ease; font-weight: 500;">
                 Features
-                <span style="font-size: 14px;">📦</span>
+                <span style="font-size: 16px;">⚙</span>
             </a>
         </li>
         <li style="width: 100%; margin: 2px 0;">
             <a href="#how-it-works" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-size: 0.95rem; border-radius: 8px; color: white; text-decoration: none; transition: all 0.2s ease; font-weight: 500;">
                 How It Works
-                <span style="font-size: 14px;">🔧</span>
+                <span style="font-size: 16px; color: white; filter: grayscale(100%) brightness(2);">⚡</span>
             </a>
         </li>
         <li style="width: 100%; margin: 2px 0;">
             <a href="#screenshots" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-size: 0.95rem; border-radius: 8px; color: white; text-decoration: none; transition: all 0.2s ease; font-weight: 500;">
                 Demo
-                <span style="font-size: 14px;">📱</span>
+                <span style="font-size: 16px;">▶</span>
             </a>
         </li>
         <li style="width: 100%; margin: 2px 0;">
             <a href="#faq" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-size: 0.95rem; border-radius: 8px; color: white; text-decoration: none; transition: all 0.2s ease; font-weight: 500;">
                 FAQ
-                <span style="font-size: 14px;">❓</span>
+                <span style="font-size: 16px;">?</span>
             </a>
         </li>
         <li style="width: 100%; margin: 2px 0;">
             <a href="#news" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-size: 0.95rem; border-radius: 8px; color: white; text-decoration: none; transition: all 0.2s ease; font-weight: 500;">
                 News
-                <span style="font-size: 14px;">📰</span>
+                <span style="font-size: 16px; color: white; filter: grayscale(100%) brightness(2);">📢</span>
             </a>
         </li>
     </ul>
@@ -196,40 +195,10 @@
         </div>
     </section>
 
-    <!-- Promotional Video Section -->
-    <section class="promotional-video-section">
-        <div class="promotional-video-container">
-            <div class="promotional-video-content">
-                <div class="promotional-video-text">
-                    <h2 class="promotional-video-title">AcciZard Lucban</h2>
-                    <p class="promotional-video-description">
-                        Your free, community-driven app for reporting accidents, hazards, and
-                        disasters in Lucban, Quezon. Whether you're a resident, tourist, or just
-                        passing by, help keep our town safe by reporting incidents in real time.
-                        Together, we can prevent accidents before they happen.
-                    </p>
-                </div>
-                <div class="promotional-video-player">
-                    <div class="video-player-wrapper">
-                        <video autoplay muted loop playsinline>
-                            <source src="tpv.mp4" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- About Section -->
 <section id="about" class="about-section">
   <div class="about-container">
-    <!-- Left side logo -->
-    <div class="about-logo">
-      <img src="accizard-favicon-circle.png" alt="Accizard Logo">
-    </div>
-
-    <!-- Right side content -->
+    <!-- Left side content -->
     <div class="about-text">
       <h2>ABOUT ACCIZARD</h2>
       <p>
@@ -245,6 +214,16 @@
       <p>
         Join us in building a resilient Lucban—report, track, and make a difference!
       </p>
+    </div>
+
+    <!-- Right side video -->
+    <div class="about-video">
+      <div class="video-player-wrapper">
+        <video autoplay muted loop playsinline>
+          <source src="tpv.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
     </div>
   </div>
     <!-- Mission & Vision Section -->
@@ -1889,10 +1868,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Update hamburger appearance based on background
                 function updateHamburgerAppearance() {
                     const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-                    const promotionalSection = document.querySelector('.promotional-video-section');
+                    const aboutSection = document.querySelector('.about-section');
                     
-                    // Check if we're in white background sections (promotional video and beyond)
-                    const isInWhiteSection = promotionalSection && scrollY >= (promotionalSection.offsetTop - 100);
+                    // Check if we're in white background sections (about section and beyond)
+                    const isInWhiteSection = aboutSection && scrollY >= (aboutSection.offsetTop - 100);
                     
                     if (isInWhiteSection) {
                         // White background sections - orange circular background

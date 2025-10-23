@@ -130,15 +130,17 @@ exports.fetchNews = onSchedule({
     // Import fetch dynamically (ES module)
     const fetch = (await import('node-fetch')).default;
     
-    // Build NewsData.io API request
+    // Build NewsData.io API request with enhanced filtering
     const apiUrl = new URL('https://newsdata.io/api/1/news');
     apiUrl.searchParams.set('apikey', NEWS_API_KEY);
     apiUrl.searchParams.set('country', 'ph');
-    apiUrl.searchParams.set('q', 'government OR disaster OR weather OR politics OR PAGASA OR DOST OR NDRRMC');
+    apiUrl.searchParams.set('language', 'en');
+    apiUrl.searchParams.set('category', 'environment,science,top');
+    apiUrl.searchParams.set('q', 'PAGASA OR NDRRMC OR NDRRMO OR DOST OR DILG OR weather OR storm OR earthquake OR flood OR typhoon OR landslide OR volcano OR "natural disaster" OR "weather update" OR "weather advisory" OR "disaster preparedness" OR "emergency alert" OR "flood warning" OR "typhoon warning" OR "earthquake alert"');
     apiUrl.searchParams.set('size', '10'); // Changed from pageSize to size
     
     console.log('📡 Fetching from NewsData.io...');
-    console.log('🔍 Query: Government, disaster, weather, politics (Philippines, filtering for relevance)');
+    console.log('🔍 Query: Enhanced Philippine filtering - Weather, Natural Disasters, Official Announcements (PAGASA, NDRRMC, DOST, DILG)');
     console.log('🔗 API URL:', apiUrl.toString());
     
     // Make API request
@@ -175,8 +177,10 @@ exports.fetchNews = onSchedule({
       fetchedAt: new Date().toISOString(),
       totalArticles: processedArticles.length,
       source: 'NewsData.io',
-      query: 'DOST OR PAGASA OR NDRRMC',
+      query: 'Enhanced Philippine filtering - Weather, Natural Disasters, Official Announcements (PAGASA, NDRRMC, DOST, DILG)',
       country: 'Philippines',
+      language: 'English',
+      categories: 'environment,science,top',
       articles: processedArticles
     };
     
@@ -333,6 +337,14 @@ function processArticles(articles) {
     return [];
   }
   
+  // Trusted Philippine sources for prioritization
+  const trustedSources = [
+    'pagasa.dost.gov.ph', 'dost.gov.ph', 'ndrrmc.gov.ph', 'ndrrrmc.gov.ph',
+    'inquirer.net', 'philstar.com', 'abs-cbn.com', 'rappler.com', 
+    'gmanetwork.com', 'cnnphilippines.com', 'mb.com.ph', 'manilatimes.net',
+    'sunstar.com.ph', 'tribune.net.ph', 'malaya.com.ph', 'businessmirror.com.ph'
+  ];
+  
   return articles
     .filter(article => {
       // Basic validation
@@ -360,22 +372,26 @@ function processArticles(articles) {
         return false;
       }
       
-      // Include keywords (government, disaster, weather, politics)
+      // Enhanced include keywords for weather, natural disasters, and official announcements
       const includeKeywords = [
-        // Government agencies
-        'dost', 'pagasa', 'ndrrmc', 'phivolcs', 'denr', 'dilg', 'doh', 'dpwh',
-        // Weather and disasters
+        // Government agencies (enhanced)
+        'dost', 'pagasa', 'ndrrmc', 'ndrrrmc', 'phivolcs', 'denr', 'dilg', 'doh', 'dpwh',
+        'ndrrrmo', 'mdrrmo', 'cdrrrmo', 'pdrrmo', 'bdrrmc',
+        // Weather and natural disasters (enhanced)
         'typhoon', 'storm', 'flood', 'earthquake', 'tsunami', 'landslide', 'drought',
         'weather', 'climate', 'disaster', 'calamity', 'emergency', 'evacuation',
         'rainfall', 'temperature', 'wind', 'cyclone', 'monsoon', 'el niño', 'la niña',
-        // Politics and government
-        'president', 'senate', 'congress', 'government', 'politics', 'policy', 'law',
-        'mayor', 'governor', 'barangay', 'lgu', 'national', 'local government',
-        'budget', 'infrastructure', 'public', 'citizen', 'community', 'province',
-        'manila', 'cebu', 'davao', 'region', 'municipality', 'city hall',
+        'volcano', 'volcanic', 'eruption', 'ash', 'lava', 'seismic', 'magnitude',
+        'flooding', 'flash flood', 'storm surge', 'high tide', 'low pressure',
+        'tropical depression', 'tropical storm', 'super typhoon', 'bagyo',
+        // Official announcements and advisories
+        'advisory', 'bulletin', 'warning', 'alert', 'announcement', 'notice',
+        'weather advisory', 'flood warning', 'typhoon warning', 'earthquake alert',
+        'disaster preparedness', 'emergency alert', 'public advisory',
         // Safety and preparedness
         'safety', 'preparedness', 'warning', 'alert', 'advisory', 'bulletin',
-        'rescue', 'relief', 'assistance', 'aid', 'response', 'recovery'
+        'rescue', 'relief', 'assistance', 'aid', 'response', 'recovery',
+        'evacuation', 'shelter', 'emergency kit', 'disaster response'
       ];
       
       // Check if article contains relevant content
@@ -389,21 +405,38 @@ function processArticles(articles) {
       console.log(`⚠️ Filtered out: ${article.title.substring(0, 50)}... (not relevant)`);
       return false;
     })
-    .map(article => ({
-      title: article.title.trim(),
-      description: article.description?.trim() || article.content?.trim() || 'No description available.',
-      image: article.image_url || 'https://via.placeholder.com/300x200?text=Government+News',
-      source: detectSource(article),
-      publishedAt: article.pubDate || new Date().toISOString(),
-      url: article.link,
-      category: article.category?.[0] || 'Government'
-    }))
+    .map(article => {
+      const source = detectSource(article);
+      const link = article.link.toLowerCase();
+      
+      // Check if from trusted source
+      const isTrustedSource = trustedSources.some(trustedDomain => link.includes(trustedDomain));
+      
+      return {
+        title: article.title.trim(),
+        description: article.description?.trim() || article.content?.trim() || 'No description available.',
+        image: article.image_url || 'https://via.placeholder.com/300x200?text=Government+News',
+        source: source,
+        publishedAt: article.pubDate || new Date().toISOString(),
+        url: article.link,
+        category: article.category?.[0] || 'Government',
+        isTrustedSource: isTrustedSource,
+        priority: isTrustedSource ? 1 : 2 // Lower number = higher priority
+      };
+    })
+    .sort((a, b) => {
+      // Sort by priority (trusted sources first), then by publication date (newest first)
+      if (a.priority !== b.priority) {
+        return a.priority - b.priority;
+      }
+      return new Date(b.publishedAt) - new Date(a.publishedAt);
+    })
     .slice(0, 10); // Return exactly 10 relevant articles
 }
 
 /**
  * DETECT NEWS SOURCE
- * Identify if article is from DOST, PAGASA, or NDRRMC
+ * Identify if article is from trusted Philippine sources
  */
 function detectSource(article) {
   const title = (article.title || '').toLowerCase();
@@ -411,6 +444,7 @@ function detectSource(article) {
   const link = (article.link || '').toLowerCase();
   const content = `${title} ${description} ${link}`;
   
+  // Official government agencies
   if (content.includes('pagasa') || link.includes('pagasa.dost.gov.ph')) {
     return 'PAGASA';
   }
@@ -421,6 +455,67 @@ function detectSource(article) {
   
   if (content.includes('ndrrmc') || link.includes('ndrrmc.gov.ph')) {
     return 'NDRRMC';
+  }
+  
+  if (content.includes('ndrrrmc') || link.includes('ndrrrmc.gov.ph')) {
+    return 'NDRRMC';
+  }
+  
+  if (content.includes('phivolcs') || link.includes('phivolcs.dost.gov.ph')) {
+    return 'PHIVOLCS';
+  }
+  
+  if (content.includes('dilg') || link.includes('dilg.gov.ph')) {
+    return 'DILG';
+  }
+  
+  // Trusted Philippine news sources
+  if (link.includes('inquirer.net')) {
+    return 'Philippine Inquirer';
+  }
+  
+  if (link.includes('philstar.com')) {
+    return 'Philippine Star';
+  }
+  
+  if (link.includes('abs-cbn.com')) {
+    return 'ABS-CBN News';
+  }
+  
+  if (link.includes('rappler.com')) {
+    return 'Rappler';
+  }
+  
+  if (link.includes('gmanetwork.com')) {
+    return 'GMA News';
+  }
+  
+  if (link.includes('cnnphilippines.com')) {
+    return 'CNN Philippines';
+  }
+  
+  if (link.includes('mb.com.ph')) {
+    return 'Manila Bulletin';
+  }
+  
+  if (link.includes('manilatimes.net')) {
+    return 'Manila Times';
+  }
+  
+  if (link.includes('sunstar.com.ph')) {
+    return 'SunStar';
+  }
+  
+  if (link.includes('tribune.net.ph')) {
+    return 'Tribune';
+  }
+  
+  if (link.includes('malaya.com.ph')) {
+    return 'Malaya';
+  }
+  
+  if (link.includes('businessmirror.com.ph')) {
+    return 'BusinessMirror';
   }
   
   return 'Government';
@@ -474,7 +569,9 @@ async function fetchNewsLogic() {
   const apiUrl = new URL('https://newsdata.io/api/1/news');
   apiUrl.searchParams.set('apikey', NEWS_API_KEY);
   apiUrl.searchParams.set('country', 'ph');
-  apiUrl.searchParams.set('q', 'government OR disaster OR weather OR politics OR PAGASA OR DOST OR NDRRMC');
+  apiUrl.searchParams.set('language', 'en');
+  apiUrl.searchParams.set('category', 'environment,science,top');
+  apiUrl.searchParams.set('q', 'PAGASA OR NDRRMC OR NDRRMO OR DOST OR DILG OR weather OR storm OR earthquake OR flood OR typhoon OR landslide OR volcano OR "natural disaster" OR "weather update" OR "weather advisory" OR "disaster preparedness" OR "emergency alert" OR "flood warning" OR "typhoon warning" OR "earthquake alert"');
   apiUrl.searchParams.set('size', '10'); // Changed from pageSize to size
   
   const response = await fetch(apiUrl.toString(), {
@@ -499,8 +596,10 @@ async function fetchNewsLogic() {
     fetchedAt: new Date().toISOString(),
     totalArticles: processedArticles.length,
     source: 'NewsData.io',
-    query: 'DOST OR PAGASA OR NDRRMC',
+    query: 'Enhanced Philippine filtering - Weather, Natural Disasters, Official Announcements (PAGASA, NDRRMC, DOST, DILG)',
     country: 'Philippines',
+    language: 'English',
+    categories: 'environment,science,top',
     articles: processedArticles
   };
   
