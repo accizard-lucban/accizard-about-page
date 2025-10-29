@@ -1,21 +1,7 @@
 {
   "hosting": [
     {
-      "site": "accizard-lucban",
-      "public": ".",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**",
-        "functions/**",
-        "*.md",
-        "*.bat",
-        "*.ps1",
-        "storage.rules"
-      ]
-    },
-    {
-      "site": "accizard-about-page",
+      "site": "accizard-lucban-about-page",
       "public": ".",
       "ignore": [
         "firebase.json",
@@ -35,6 +21,26 @@
         {
           "source": "/",
           "destination": "/index.html"
+        }
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css|png|jpg|jpeg|gif|svg|webp|ico|mp4|woff|woff2|ttf|eot|json)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "**/*.html",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            }
+          ]
         }
       ]
     }

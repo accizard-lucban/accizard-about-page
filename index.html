@@ -11,6 +11,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     
+    <!-- Content Security Policy - Allow Facebook and YouTube embeds -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect.facebook.net https://cdn.jsdelivr.net https://polyfill.io https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.cdnfonts.com https://cdnjs.cloudflare.com https://staticxx.facebook.com https://static.xx.fbcdn.net; font-src 'self' https://fonts.cdnfonts.com https://cdnjs.cloudflare.com data:; frame-src 'self' https://*.facebook.com https://www.facebook.com https://web.facebook.com https://facebook.com https://m.facebook.com https://www.youtube.com https://youtube.com; connect-src 'self' https://*.facebook.com https://www.facebook.com https://web.facebook.com https://connect.facebook.net https://api.emailjs.com https://www.youtube.com https://youtube.com https://graph.facebook.com https://cdn.jsdelivr.net; img-src 'self' data: https: blob: https://img.youtube.com https://*.fbcdn.net https://scontent.xx.fbcdn.net https://scontent.fbcdn.net https://fbcdn.net https://static.xx.fbcdn.net https://staticxx.facebook.com https://platform-lookaside.fbsbx.com; media-src 'self' https: blob:; child-src 'self' https://*.facebook.com https://www.facebook.com https://web.facebook.com https://facebook.com https://m.facebook.com; worker-src 'self' blob:; object-src 'none';">
+    
     <!-- Browser Compatibility Polyfills for Android 8+ and older iOS -->
     <script>
         // Browser feature detection - non-intrusive check
@@ -42,12 +45,71 @@
     </script>
     
     <title>Accizard - Report Hazards. Save Lives. Stay Safe. (v2.0)</title>
+    <!-- Asset Version - Update this when deploying changes to static files -->
+    <script>
+      window.ASSET_VERSION = '20241201';
+    </script>
     <link rel="stylesheet" href="styles.css?v=20241201">
     <link href="https://fonts.cdnfonts.com/css/okta-neue" rel="stylesheet">
     <link
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 />
+    <!-- Facebook SDK for Page Feed Embed -->
+    <div id="fb-root"></div>
+    <script>
+      window.fbAsyncInit = function() {
+        try {
+          FB.init({
+            xfbml: true,
+            version: 'v19.0',
+            cookie: false,
+            autoLogAppEvents: false,
+            status: false
+          });
+          
+          console.log('✅ Facebook SDK initialized successfully');
+          
+          // Wait for DOM to be fully ready before parsing
+          function parseXFBML() {
+            if (window.FB && window.FB.XFBML) {
+              try {
+                FB.XFBML.parse();
+                console.log('✅ Facebook XFBML parsed');
+              } catch (error) {
+                console.error('❌ Error parsing XFBML:', error);
+              }
+            }
+          }
+          
+          if (document.readyState === 'complete') {
+            setTimeout(parseXFBML, 100);
+          } else {
+            window.addEventListener('load', function() {
+              setTimeout(parseXFBML, 100);
+            });
+          }
+          
+          // Also try parsing after DOMContentLoaded
+          document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(parseXFBML, 500);
+          });
+        } catch (error) {
+          console.error('❌ Facebook SDK initialization error:', error);
+        }
+      };
+      
+      // Error handler for Facebook SDK loading
+      window.addEventListener('error', function(e) {
+        if (e.message && e.message.includes('facebook')) {
+          console.error('❌ Facebook SDK loading error:', e);
+        }
+      }, true);
+    </script>
+    <script async defer crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js"
+      onerror="console.error('❌ Failed to load Facebook SDK')">
+    </script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js?v=1"></script>
     
     <!-- Contact Form Configuration -->
@@ -219,7 +281,7 @@
     <!-- Right side video -->
     <div class="about-video">
       <div class="video-player-wrapper">
-        <video autoplay muted loop playsinline>
+        <video autoplay muted loop playsinline onerror="this.style.display='none';">
           <source src="tpv.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
@@ -348,16 +410,21 @@
         </div>
       </div>
 
-      <div class="video-card" data-video="mobapp.mp4">
-        <video src="mobapp.mp4" muted loop></video>
+      <!-- YouTube Video Embed - Start -->
+      <!-- YouTube video: https://youtu.be/pHYO5soo4TE - Opens in popup -->
+      <div class="video-card youtube-video-card" data-youtube="true" data-youtube-id="pHYO5soo4TE">
+        <div class="youtube-preview-container">
+          <img src="https://img.youtube.com/vi/pHYO5soo4TE/hqdefault.jpg" alt="AcciZard Mobile App Demo" loading="lazy" onerror="this.src='https://img.youtube.com/vi/pHYO5soo4TE/mqdefault.jpg';">
+        </div>
         <div class="video-overlay">
           <h3>Mobile App Interface</h3>
           <div class="play-btn">▶</div>
         </div>
       </div>
+      <!-- YouTube Video Embed - End -->
 
       <div class="video-card" data-video="mobile.mp4">
-        <video src="mobile.mp4" muted loop></video>
+        <video src="mobile.mp4" muted loop onerror="console.warn('Video file mobile.mp4 not found'); this.style.display='none';"></video>
         <div class="video-overlay">
           <h3>Web Admin Dashboard</h3>
           <div class="play-btn">▶</div>
@@ -371,6 +438,9 @@
     <div class="video-popup-content">
       <span class="close-btn">&times;</span>
       <video controls autoplay></video>
+      <div class="youtube-popup-container" style="display: none;">
+        <iframe id="youtube-popup-iframe" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
     </div>
   </div>
 
@@ -414,46 +484,130 @@
   </div>
 </section>
 <script>
-const videoCards = document.querySelectorAll('.video-card');
-const popup = document.querySelector('.video-popup');
-const popupVideo = popup.querySelector('video');
-const closeBtn = document.querySelector('.close-btn');
-
-videoCards.forEach(card => {
-  card.addEventListener('click', () => {
-    const videoSrc = card.getAttribute('data-video');
-    popupVideo.src = videoSrc;
-    popup.classList.add('active');
-    popupVideo.play();
-  });
-});
-
-closeBtn.addEventListener('click', () => {
-  popup.classList.remove('active');
-  popupVideo.pause();
-  popupVideo.currentTime = 0;
-});
-
-// Close on background click
-popup.addEventListener('click', (e) => {
-  if (e.target === popup) {
-    popup.classList.remove('active');
-    popupVideo.pause();
-    popupVideo.currentTime = 0;
+// Video card handlers - includes YouTube embeds with popup
+// Wait for DOM to be ready to ensure elements exist
+document.addEventListener('DOMContentLoaded', function() {
+  const videoCards = document.querySelectorAll('.video-card');
+  const popup = document.querySelector('.video-popup');
+  
+  if (!popup) {
+    console.error('Video popup element not found');
+    return;
   }
-});
-
-// Add hover effects for video preview
-videoCards.forEach(card => {
-  const video = card.querySelector('video');
   
-  card.addEventListener('mouseenter', () => {
-    video.play();
+  const popupVideo = popup.querySelector('video');
+  const youtubeContainer = popup.querySelector('.youtube-popup-container');
+  const youtubeIframe = popup.querySelector('#youtube-popup-iframe');
+  const closeBtn = popup.querySelector('.close-btn');
+  
+  // Handle video card clicks (both local videos and YouTube)
+  videoCards.forEach(card => {
+    // Handle clicks on the card itself
+    card.addEventListener('click', (e) => {
+      const isYouTube = card.hasAttribute('data-youtube');
+      const youtubeId = card.getAttribute('data-youtube-id');
+      
+      if (isYouTube && youtubeId) {
+        // Handle YouTube video
+        if (popupVideo && youtubeContainer && youtubeIframe) {
+          popupVideo.style.display = 'none';
+          youtubeContainer.style.display = 'block';
+          youtubeIframe.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`;
+          popup.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      } else {
+        // Handle local video
+        const videoSrc = card.getAttribute('data-video');
+        if (videoSrc && popupVideo && youtubeContainer) {
+          youtubeContainer.style.display = 'none';
+          popupVideo.style.display = 'block';
+          popupVideo.src = videoSrc;
+          popup.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          setTimeout(() => {
+            popupVideo.play().catch(err => console.log('Video play error:', err));
+          }, 100);
+        }
+      }
+    });
+    
+    // Also handle clicks on the overlay
+    const overlay = card.querySelector('.video-overlay');
+    if (overlay) {
+      overlay.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isYouTube = card.hasAttribute('data-youtube');
+        const youtubeId = card.getAttribute('data-youtube-id');
+        
+        if (isYouTube && youtubeId) {
+          if (popupVideo && youtubeContainer && youtubeIframe) {
+            popupVideo.style.display = 'none';
+            youtubeContainer.style.display = 'block';
+            youtubeIframe.src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`;
+            popup.classList.add('active');
+            document.body.style.overflow = 'hidden';
+          }
+        } else {
+          const videoSrc = card.getAttribute('data-video');
+          if (videoSrc && popupVideo && youtubeContainer) {
+            youtubeContainer.style.display = 'none';
+            popupVideo.style.display = 'block';
+            popupVideo.src = videoSrc;
+            popup.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+              popupVideo.play().catch(err => console.log('Video play error:', err));
+            }, 100);
+          }
+        }
+      });
+    }
   });
   
-  card.addEventListener('mouseleave', () => {
-    video.pause();
-    video.currentTime = 0;
+  // Close button handler
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      popup.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      if (popupVideo) {
+        popupVideo.pause();
+        popupVideo.currentTime = 0;
+      }
+      if (youtubeIframe) {
+        youtubeIframe.src = '';
+      }
+    });
+  }
+  
+  // Close on background click
+  popup.addEventListener('click', (e) => {
+    if (e.target === popup) {
+      popup.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      if (popupVideo) {
+        popupVideo.pause();
+        popupVideo.currentTime = 0;
+      }
+      if (youtubeIframe) {
+        youtubeIframe.src = '';
+      }
+    }
+  });
+  
+  // Add hover effects for video preview (exclude YouTube cards)
+  videoCards.forEach(card => {
+    const video = card.querySelector('video');
+    if (video && !card.hasAttribute('data-youtube')) {
+      card.addEventListener('mouseenter', () => {
+        video.play().catch(err => console.log('Video autoplay error:', err));
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        video.pause();
+        video.currentTime = 0;
+      });
+    }
   });
 });
 
@@ -700,13 +854,38 @@ document.addEventListener('DOMContentLoaded', () => {
     <section id="news" class="news-section">
         <div class="container">
             <h2 class="section-title">Latest News Updates</h2>
-            <p class="section-subtitle">Stay informed with the latest updates from PAGASA, DOST, and NDRRMC</p>
+            <p class="section-subtitle">Stay informed with the latest updates from MDRRMO Lucban</p>
             
-            <div class="news-carousel">
-                <button class="carousel-btn prev-btn" id="prevBtn">❮</button>
-                <button class="carousel-btn next-btn" id="nextBtn">❯</button>
-                <div class="news-container">
-                    <!-- News items will be dynamically loaded here by JavaScript -->
+            <div class="facebook-feed-container">
+                <!-- Facebook Page Feed Embed - Updated Settings -->
+                <!-- Header hidden via CSS to show only timeline posts -->
+                <div class="fb-page-wrapper">
+                    <div class="fb-page"
+                      data-href="https://www.facebook.com/mdrrmolucban"
+                      data-tabs="timeline"
+                      data-width="1400"
+                      data-height="400"
+                      data-small-header="true"
+                      data-adapt-container-width="true"
+                      data-hide-cover="true"
+                      data-show-facepile="false"
+                      data-lazy="false">
+                    </div>
+                    
+                    <!-- Fallback if Facebook embed fails -->
+                    <div id="facebook-fallback" class="facebook-fallback" style="display: none; padding: 40px 20px; text-align: center; background: #f5f5f5; border-radius: 10px; margin-top: 20px;">
+                        <div class="fallback-content">
+                            <h3 style="margin-bottom: 15px; color: #1877f2;">📱 Follow Us on Facebook</h3>
+                            <p style="margin-bottom: 20px; color: #666;">Visit our Facebook page to see the latest news and updates from MDRRMO Lucban.</p>
+                            <a href="https://www.facebook.com/mdrrmolucban" target="_blank" rel="noopener noreferrer" 
+                               style="display: inline-block; padding: 12px 24px; background: #1877f2; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 8px;">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
+                                Visit Facebook Page
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -924,539 +1103,71 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 
     <script>
-    // NewsData.io API Configuration
-    const NEWS_API_KEY = 'pub_e50a94871c1640aaa68bf69837585a15';
-    const NEWS_API_URL = 'https://newsdata.io/api/1/news';
+    // Facebook Page Feed Integration
+    // Removed NewsData.io API - Now using Facebook Page Feed Embed
+    // The Facebook SDK loads the feed dynamically from https://www.facebook.com/mdrrmolucban
     
-    // Embedded cache data (works with file:// protocol) - 3 articles per source (9 total)
-    window.CACHED_NEWS_DATA = {
-      "articles": [
-        // PAGASA Articles (3)
-        {
-          "id": "PAGASA_1728678000_001",
-          "title": "PAGASA Issues Weather Advisory for Tropical Depression",
-          "description": "The Philippine Atmospheric, Geophysical and Astronomical Services Administration warns of potential flooding in low-lying areas as a tropical depression approaches the eastern seaboard. Residents are advised to monitor weather updates and prepare emergency kits.",
-          "link": "https://www.pagasa.dost.gov.ph/tropical-cyclone-bulletin",
-          "image": "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=300&h=200&fit=crop&crop=center",
-          "source": "PAGASA",
-          "time": "1 hour ago",
-          "publishedAt": "2024-10-12T11:00:00Z",
-          "category": "environment"
-        },
-        {
-          "id": "PAGASA_1728674400_002",
-          "title": "Typhoon Season Outlook: Enhanced Monitoring Systems",
-          "description": "PAGASA announces deployment of advanced weather monitoring systems across the archipelago to improve typhoon tracking and early warning capabilities for the upcoming season.",
-          "link": "https://www.pagasa.dost.gov.ph/climate-monitoring",
-          "image": "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=300&h=200&fit=crop&crop=center",
-          "source": "PAGASA",
-          "time": "3 hours ago",
-          "publishedAt": "2024-10-12T09:00:00Z",
-          "category": "environment"
-        },
-        {
-          "id": "PAGASA_1728670800_003",
-          "title": "Climate Data Shows Rising Sea Temperatures",
-          "description": "Latest oceanographic data reveals significant warming trends in Philippine waters, affecting marine ecosystems and weather patterns nationwide. Scientists urge immediate climate action.",
-          "link": "https://www.pagasa.dost.gov.ph/climate-data",
-          "image": "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=300&h=200&fit=crop&crop=center",
-          "source": "PAGASA",
-          "time": "5 hours ago",
-          "publishedAt": "2024-10-12T07:00:00Z",
-          "category": "environment"
-        },
+    // Wait for Facebook SDK to be ready and parse XFBML
+    // This ensures the fb-page element is rendered after SDK loads
+    // Check if Facebook embed loaded successfully, show fallback if not
+    function checkFacebookFeedStatus() {
+      setTimeout(() => {
+        const fbIframe = document.querySelector('.fb-page iframe');
+        const fallback = document.getElementById('facebook-fallback');
         
-        // DOST Articles (3)
-        {
-          "id": "DOST_1728678000_001",
-          "title": "DOST Launches AI-Powered Disaster Early Warning System",
-          "description": "Revolutionary artificial intelligence system can predict natural disasters 72 hours in advance, potentially saving thousands of lives. The system integrates weather data, seismic readings, and satellite imagery.",
-          "link": "https://www.dost.gov.ph/news/dost-launches-ai-powered-disaster-early-warning-system",
-          "image": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=200&fit=crop&crop=center",
-          "source": "DOST",
-          "time": "2 hours ago",
-          "publishedAt": "2024-10-12T10:00:00Z",
-          "category": "technology"
-        },
-        {
-          "id": "DOST_1728674400_002",
-          "title": "Philippine Space Program Achieves New Milestone",
-          "description": "DOST announces successful deployment of advanced Earth observation satellite, enhancing disaster monitoring capabilities. The satellite will provide real-time data for weather forecasting and environmental monitoring.",
-          "link": "https://www.dost.gov.ph/news/philippine-space-program-achieves-new-milestone",
-          "image": "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=300&h=200&fit=crop&crop=center",
-          "source": "DOST",
-          "time": "4 hours ago",
-          "publishedAt": "2024-10-12T08:00:00Z",
-          "category": "technology"
-        },
-        {
-          "id": "DOST_1728670800_003",
-          "title": "Breakthrough in Renewable Energy Research",
-          "description": "Filipino scientists develop innovative solar panel technology with 40% higher efficiency, promising cheaper clean energy for households and businesses across the Philippines.",
-          "link": "https://www.dost.gov.ph/news/breakthrough-in-renewable-energy-research",
-          "image": "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=300&h=200&fit=crop&crop=center",
-          "source": "DOST",
-          "time": "6 hours ago",
-          "publishedAt": "2024-10-12T06:00:00Z",
-          "category": "technology"
-        },
-        
-        // NDRRMC Articles (3)
-        {
-          "id": "NDRRMC_1728678000_001",
-          "title": "National Earthquake Drill Conducted Nationwide",
-          "description": "Millions of Filipinos participate in simultaneous earthquake drill, testing emergency response protocols across all regions. The exercise aims to improve disaster preparedness and response coordination.",
-          "link": "https://www.ndrrmc.gov.ph/news/national-earthquake-drill-conducted-nationwide",
-          "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=200&fit=crop&crop=center",
-          "source": "NDRRMC",
-          "time": "2 hours ago",
-          "publishedAt": "2024-10-12T10:00:00Z",
-          "category": "health"
-        },
-        {
-          "id": "NDRRMC_1728674400_002",
-          "title": "Flood Preparedness Campaign Launched",
-          "description": "Comprehensive public awareness campaign educates communities on flood risks and evacuation procedures ahead of rainy season. Local government units receive updated emergency response protocols.",
-          "link": "https://www.ndrrmc.gov.ph/news/flood-preparedness-campaign-launched",
-          "image": "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=300&h=200&fit=crop&crop=center",
-          "source": "NDRRMC",
-          "time": "4 hours ago",
-          "publishedAt": "2024-10-12T08:00:00Z",
-          "category": "health"
-        },
-        {
-          "id": "NDRRMC_1728670800_003",
-          "title": "Emergency Communication System Upgraded",
-          "description": "New satellite-based communication network ensures uninterrupted emergency coordination during disasters. The system provides backup communications when traditional networks fail.",
-          "link": "https://www.ndrrmc.gov.ph/news/emergency-communication-system-upgraded",
-          "image": "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=300&h=200&fit=crop&crop=center",
-          "source": "NDRRMC",
-          "time": "6 hours ago",
-          "publishedAt": "2024-10-12T06:00:00Z",
-          "category": "technology"
-        }
-      ],
-      "lastUpdated": "2024-10-12T12:00:00Z",
-      "totalArticles": 9,
-      "sources": ["DOST", "PAGASA", "NDRRMC"],
-      "nextUpdate": "2024-10-13T12:00:00Z"
-    };
-    
-    // News Management System
-    class NewsManager {
-      constructor() {
-        this.newsContainer = document.querySelector('.news-container');
-        this.currentIndex = 0;
-        this.totalItems = 0;
-        this.newsData = [];
-        this.isPaused = false;
-        this.autoAdvanceInterval = null;
-        this.isRefreshing = false;
-        
-        // Don't get button references here - wait for DOM to be ready
-        this.prevBtn = null;
-        this.nextBtn = null;
-        this.refreshBtn = null;
-        
-        this.init();
-      }
-      
-      async init() {
-        // Load existing news from localStorage or fetch new ones
-        await this.loadNews();
-        this.setupCarousel();
-        this.setupAutoFetch();
-      }
-      
-      async loadNews() {
-        try {
-          // Load news from cached JSON file
-          await this.fetchNewsFromCache();
-        } catch (error) {
-          console.error('Error loading news:', error);
-          this.showNewsStatus('Error loading news. Please try again later.', 'error');
-        }
-      }
-      
-      async fetchNewsFromCache() {
-        try {
-          this.showNewsStatus('Loading latest news...', 'info');
+        if (!fbIframe || !fbIframe.src || fbIframe.src === 'about:blank') {
+          console.warn('⚠️ Facebook feed did not load. Showing fallback link.');
+          console.warn('   Note: Facebook X-Frame-Options may be blocking the embed.');
           
-          // Try to fetch from Firebase Cloud Function (production)
-          try {
-            const response = await fetch('https://getnews-4hksadkxba-uc.a.run.app');
-            if (response.ok) {
-              const newsData = await response.json();
-              if (newsData.articles && newsData.articles.length > 0) {
-                this.newsData = newsData.articles;
-                const lastUpdated = new Date(newsData.fetchedAt).toLocaleString();
-                this.showNewsStatus(`✅ Loaded ${newsData.articles.length} latest news articles (Auto-fetched every 5 hours). Updated: ${lastUpdated}`, 'success');
-                this.renderNews();
-                return;
+          // Hide the fb-page element and show fallback
+          const fbPage = document.querySelector('.fb-page');
+          if (fbPage) {
+            fbPage.style.display = 'none';
+          }
+          
+          if (fallback) {
+            fallback.style.display = 'block';
+          }
+        } else {
+          console.log('✅ Facebook iframe detected:', fbIframe.src);
+          
+          // Hide fallback if embed loaded
+          if (fallback) {
+            fallback.style.display = 'none';
+          }
+          
+          // Check if iframe is blocked by X-Frame-Options after it loads
+          fbIframe.addEventListener('load', function() {
+            try {
+              // Try to access iframe content (will fail if blocked)
+              const iframeDoc = fbIframe.contentDocument || fbIframe.contentWindow.document;
+              // If we get here, iframe loaded successfully
+              console.log('✅ Facebook iframe content loaded successfully');
+            } catch (e) {
+              // Cross-origin error is normal, but if we see X-Frame-Options error in console,
+              // Facebook is blocking the embed
+              console.warn('⚠️ Facebook iframe may be blocked by X-Frame-Options');
+              console.warn('   This is a Facebook security policy and cannot be bypassed.');
+              
+              // Show fallback as alternative
+              if (fallback) {
+                fallback.style.display = 'block';
               }
             }
-          } catch (fetchError) {
-            console.log('Firebase function not available, trying fallback...', fetchError.message);
-          }
-          
-          // Fallback: try to load from embedded cache data (works with file:// protocol)
-          if (window.CACHED_NEWS_DATA) {
-            const cachedData = window.CACHED_NEWS_DATA;
-            if (cachedData.articles && cachedData.articles.length > 0) {
-              this.newsData = cachedData.articles;
-              this.showNewsStatus(`📄 Loaded ${cachedData.articles.length} sample news articles.`, 'info');
-              this.renderNews();
-              return;
-            }
-          }
-          
-          throw new Error('No cached data available');
-          
-        } catch (error) {
-          console.error('Error loading cached news:', error);
-          
-          // Only show error message if we don't have any news data yet
-          if (!this.newsData || this.newsData.length === 0) {
-            this.showNewsStatus('Loading sample news...', 'info');
-            // Fallback to sample data if cache fails
-            this.loadSampleNews();
-          } else {
-            console.log('Cache update failed, keeping existing news data');
-          }
+          });
         }
-      }
-      
-      showNewsStatus(message, type = 'info') {
-        console.log(`News Status (${type}): ${message}`);
-        
-        // Create or update status element
-        let statusElement = document.querySelector('.news-status');
-        if (!statusElement) {
-          statusElement = document.createElement('div');
-          statusElement.className = 'news-status';
-          
-          // Simply append to news section or body - avoid insertBefore issues
-          const newsSection = document.querySelector('.news-section');
-          if (newsSection) {
-            newsSection.appendChild(statusElement);
-          } else {
-            document.body.appendChild(statusElement);
-          }
-        }
-        
-        statusElement.textContent = message;
-        statusElement.className = `news-status ${type}`;
-        statusElement.style.display = 'block';
-        
-        // Auto-hide success messages after 5 seconds
-        if (type === 'success') {
-          setTimeout(() => {
-            if (statusElement && statusElement.parentNode) {
-              statusElement.style.display = 'none';
-            }
-          }, 5000);
-        }
-      }
-      
-      // Removed old API fetching - now using cached data from Node.js backend
-      
-      // Utility methods removed - data now comes pre-processed from backend cache
-      
-      // Fetch counting methods removed - backend handles API rate limiting
-      
-      formatTime(timestamp) {
-        if (!timestamp) return 'Recently';
-        
-        try {
-          const date = new Date(timestamp);
-          const now = new Date();
-          const diffMs = now - date;
-          const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-          const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-          
-          if (diffHours < 1) {
-            const diffMins = Math.floor(diffMs / (1000 * 60));
-            return diffMins <= 0 ? 'Just now' : `${diffMins} minutes ago`;
-          } else if (diffHours < 24) {
-            return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
-          } else if (diffDays < 7) {
-            return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
-          } else {
-            return date.toLocaleDateString();
-          }
-        } catch (error) {
-          console.error('Error formatting time:', error);
-          return 'Recently';
-        }
-      }
-      
-      renderNews() {
-        this.newsContainer.innerHTML = '';
-        
-        this.newsData.forEach((article, index) => {
-          const newsItem = document.createElement('div');
-          newsItem.className = 'news-item';
-          newsItem.setAttribute('data-source', article.source);
-          
-          // Truncate description for initial display
-          const shortDescription = article.description.length > 150 
-            ? article.description.substring(0, 150) + '...' 
-            : article.description;
-          
-          const needsSeeMore = article.description.length > 150;
-          
-          newsItem.innerHTML = `
-            <div class="news-image">
-              <img src="${article.image}" alt="${article.title}" onload="this.classList.add('loaded')" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDMwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMjAgODBIMTgwVjEyMEgxMjBWODBaIiBmaWxsPSIjQ0NDIi8+CjxjaXJjbGUgY3g9IjE0MCIgY3k9IjkwIiByPSI1IiBmaWxsPSIjOTk5Ii8+CjxwYXRoIGQ9Ik0xMzAgMTEwTDE0NSA5NUwxNjAgMTEwSDE3MFYxMjBIMTMwVjExMFoiIGZpbGw9IiM5OTkiLz4KPHRleHQgeD0iMTUwIiB5PSIxNTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2NjYiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiPk5ld3MgSW1hZ2U8L3RleHQ+Cjwvc3ZnPgo='; this.classList.add('loaded')" loading="lazy">
-            </div>
-            <div class="news-content">
-              <div class="news-source ${article.source}">${article.source}</div>
-              <h3 class="news-title">${article.title}</h3>
-              <div class="news-description collapsed" data-full="${article.description}" data-short="${shortDescription}">
-                <div class="text-content">${shortDescription}</div>
-              </div>
-              ${needsSeeMore ? '<button class="see-more-btn">See more</button>' : ''}
-              <div class="news-meta">
-                <span class="news-time">${this.formatTime(article.publishedAt || article.time)}</span>
-                <a href="${article.url || article.link}" target="_blank" class="news-link">Read More</a>
-              </div>
-            </div>
-          `;
-          
-          this.newsContainer.appendChild(newsItem);
-          
-          // Add see more functionality
-          if (needsSeeMore) {
-            const seeMoreBtn = newsItem.querySelector('.see-more-btn');
-            const description = newsItem.querySelector('.news-description');
-            
-            seeMoreBtn.addEventListener('click', () => {
-              if (description.classList.contains('collapsed')) {
-                description.classList.remove('collapsed');
-                description.innerHTML = `<div class="text-content">${article.description}</div>`;
-                seeMoreBtn.textContent = 'See less';
-                this.pauseAutoAdvance(); // Pause auto-advance when expanding
-              } else {
-                description.classList.add('collapsed');
-                description.innerHTML = `<div class="text-content">${shortDescription}</div>`;
-                seeMoreBtn.textContent = 'See more';
-                this.resumeAutoAdvance(); // Resume auto-advance when collapsing
-              }
-            });
-          }
-        });
-        
-        this.totalItems = this.newsData.length;
-        this.currentIndex = 0;
-        this.updateCarousel();
-      }
-      
-      setupCarousel() {
-        console.log('Setting up carousel...');
-        
-        // Set up navigation buttons with multiple attempts
-        this.setupNavigationButtons();
-        
-        // Auto-advance carousel every 8 seconds
-        this.startAutoAdvance();
-      }
-      
-      setupNavigationButtons() {
-        console.log('Setting up carousel navigation buttons...');
-        
-        // Wait for DOM and then setup buttons
-        setTimeout(() => {
-          this.prevBtn = document.getElementById('prevBtn');
-          this.nextBtn = document.getElementById('nextBtn');
-          
-          if (this.prevBtn && this.nextBtn) {
-            console.log('✅ Carousel buttons found!');
-            
-            this.prevBtn.addEventListener('click', (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              console.log('🔙 Previous carousel button clicked!');
-              this.prevSlide();
-              this.pauseAutoAdvance();
-              setTimeout(() => this.resumeAutoAdvance(), 5000);
-            });
-            
-            this.nextBtn.addEventListener('click', (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              console.log('▶️ Next carousel button clicked!');
-              this.nextSlide();
-              this.pauseAutoAdvance();
-              setTimeout(() => this.resumeAutoAdvance(), 5000);
-            });
-            
-            console.log('✅ Carousel navigation ready!');
-          } else {
-            console.error('❌ Carousel buttons not found');
-          }
-        }, 500);
-      }
-      
-      prevSlide() {
-        if (this.newsData.length <= 1) return;
-        
-        this.currentIndex = this.currentIndex > 0 ? this.currentIndex - 1 : this.newsData.length - 1;
-        this.updateCarousel();
-        console.log(`Previous slide: ${this.currentIndex + 1}/${this.newsData.length}`);
-      }
-      
-      nextSlide() {
-        if (this.newsData.length <= 1) return;
-        
-        this.currentIndex = this.currentIndex < this.newsData.length - 1 ? this.currentIndex + 1 : 0;
-        this.updateCarousel();
-        console.log(`Next slide: ${this.currentIndex + 1}/${this.newsData.length}`);
-      }
-      
-      startAutoAdvance() {
-        // Clear any existing interval first
-        if (this.autoAdvanceInterval) {
-          clearInterval(this.autoAdvanceInterval);
-        }
-        
-        console.log('🔄 Starting auto-advance (8 second intervals)');
-        this.autoAdvanceInterval = setInterval(() => {
-          if (!this.isPaused && this.newsData.length > 1) {
-            console.log('⏭️ Auto-advancing to next slide...');
-            this.nextSlide();
-          }
-        }, 8000);
-      }
-      
-      pauseAutoAdvance() {
-        console.log('⏸️ Auto-advance paused');
-        this.isPaused = true;
-        // Clear the interval to completely stop auto-advance
-        if (this.autoAdvanceInterval) {
-          clearInterval(this.autoAdvanceInterval);
-          this.autoAdvanceInterval = null;
-        }
-      }
-      
-      resumeAutoAdvance() {
-        console.log('▶️ Auto-advance resumed');
-        this.isPaused = false;
-        // Restart the interval
-        this.startAutoAdvance();
-      }
-      
-      setupAutoFetch() {
-        // Check for cache updates every 5 minutes (reduced from 30 minutes for testing)
-        setInterval(async () => {
-          console.log('Checking for news cache updates...');
-          try {
-            await this.fetchNewsFromCache();
-          } catch (error) {
-            console.log('Auto-refresh failed, will try again later:', error.message);
-          }
-        }, 5 * 60 * 1000); // 5 minutes in milliseconds
-      }
-      
-      updateCarousel() {
-        if (this.newsData.length === 0) {
-          console.log('No news data available for carousel');
-          return;
-        }
-        
-        // Show only the current news item
-        const newsItems = this.newsContainer.querySelectorAll('.news-item');
-        console.log(`Found ${newsItems.length} news items in DOM`);
-        
-        if (newsItems.length === 0) {
-          console.log('No news items found in DOM');
-          return;
-        }
-        
-        newsItems.forEach((item, index) => {
-          if (index === this.currentIndex) {
-            item.style.display = 'flex';
-            item.style.opacity = '1';
-          } else {
-            item.style.display = 'none';
-            item.style.opacity = '0';
-          }
-        });
-        
-        console.log(`Showing article ${this.currentIndex + 1} of ${this.newsData.length}`);
-        
-        // Update navigation button states
-        if (this.prevBtn) {
-          this.prevBtn.disabled = false;
-        }
-        if (this.nextBtn) {
-          this.nextBtn.disabled = false;
-        }
-      }
-      
-      async manualRefresh() {
-        if (this.isRefreshing) {
-          return; // Prevent multiple simultaneous refreshes
-        }
-        
-        this.isRefreshing = true;
-        this.refreshBtn.disabled = true;
-        this.refreshBtn.classList.add('loading');
-        this.refreshBtn.textContent = '🔄 Refreshing...';
-        
-        try {
-          this.showNewsStatus('Fetching latest news...', 'info');
-          
-          // In a real implementation, this would trigger the backend news fetcher
-          // For now, we'll simulate a refresh by reloading the cached data
-          await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-          
-          await this.fetchNewsFromCache();
-          this.showNewsStatus('✅ News refreshed successfully!', 'success');
-          
-        } catch (error) {
-          console.error('Manual refresh failed:', error);
-          this.showNewsStatus('❌ Failed to refresh news. Please try again.', 'error');
-        } finally {
-          this.isRefreshing = false;
-          this.refreshBtn.disabled = false;
-          this.refreshBtn.classList.remove('loading');
-          this.refreshBtn.textContent = '🔄 Refresh';
-          
-          // Hide status after 3 seconds
-          setTimeout(() => {
-            const statusElement = document.querySelector('.news-status');
-            if (statusElement) {
-              statusElement.remove();
-            }
-          }, 3000);
-        }
-      }
-      
-      loadSampleNews() {
-        // Fallback sample news if API fails
-        this.newsData = [
-          {
-            id: 1,
-            title: 'PAGASA Issues Weather Advisory for Tropical Depression',
-            description: 'The Philippine Atmospheric, Geophysical and Astronomical Services Administration warns of potential flooding in low-lying areas.',
-            image: 'https://via.placeholder.com/300x200?text=Weather+Alert',
-            link: 'https://www.pagasa.dost.gov.ph',
-            source: 'PAGASA',
-            time: '2 hours ago'
-          },
-          {
-            id: 2,
-            title: 'DOST Launches New Disaster Monitoring Technology',
-            description: 'Department of Science and Technology introduces advanced early warning systems for better disaster preparedness.',
-            image: 'https://via.placeholder.com/300x200?text=Technology+Update',
-            link: 'https://www.dost.gov.ph',
-            source: 'DOST',
-            time: '4 hours ago'
-          }
-        ];
-        this.renderNews();
-      }
+      }, 4000); // Check after 4 seconds to allow time for SDK to render
     }
+    
+    // Check feed status after page loads
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkFacebookFeedStatus);
+    } else {
+      checkFacebookFeedStatus();
+    }
+    
+    // Also check after window load as backup
+    window.addEventListener('load', checkFacebookFeedStatus);
     
     // Force mobile layout for in-app browsers
     function forceMobileLayout() {
@@ -1473,640 +1184,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mobile Navigation Toggle
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('DOM loaded, initializing News Manager...');
+      console.log('DOM loaded');
       
       // Force mobile layout first
       forceMobileLayout();
       
-      new NewsManager();
+      // Facebook Page Feed loads automatically via SDK
       
-    });
-    </script>
-
-    <!-- Script.js removed to prevent caching issues -->
-    
-    <!-- Inline JavaScript to replace script.js -->
-    <script>
-        // Mobile Navigation with enhanced mobile detection
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🔧 Setting up mobile navigation...');
-            
-            // Detect mobile device and browser
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            const isAndroid = /Android/.test(navigator.userAgent);
-            const isOlderBrowser = /Android [4-8]|iPhone OS [6-9]|iPad OS [6-9]/.test(navigator.userAgent);
-            
-            console.log('📱 Device Detection:', {
-                isMobile: isMobile,
-                isIOS: isIOS,
-                isAndroid: isAndroid,
-                isOlderBrowser: isOlderBrowser,
-                userAgent: navigator.userAgent
-            });
-            
-            // Browser compatibility checks
-            const browserFeatures = {
-                fetch: 'fetch' in window,
-                promise: 'Promise' in window,
-                intersectionObserver: 'IntersectionObserver' in window,
-                resizeObserver: 'ResizeObserver' in window,
-                scrollBehavior: 'scrollBehavior' in document.documentElement.style,
-                cssGrid: CSS.supports && CSS.supports('display', 'grid'),
-                cssFlexbox: CSS.supports && CSS.supports('display', 'flex')
-            };
-            
-            console.log('🔧 Browser Features:', browserFeatures);
-            
-            // Global error handler for mobile debugging
-            window.addEventListener('error', function(e) {
-                console.error('🚨 JavaScript Error:', e.error);
-                console.error('🚨 Error Details:', {
-                    message: e.message,
-                    filename: e.filename,
-                    lineno: e.lineno,
-                    colno: e.colno
-                });
-            });
-            
-            // Unhandled promise rejection handler
-            window.addEventListener('unhandledrejection', function(e) {
-                console.error('🚨 Unhandled Promise Rejection:', e.reason);
-            });
-            
-            // Mobile navigation toggle
-      const navToggle = document.getElementById('navToggle');
-      const navLinks = document.getElementById('navLinks');
-      
-            console.log('NavToggle element:', navToggle);
-            console.log('NavLinks element:', navLinks);
-      
-      if (navToggle && navLinks) {
-                console.log('✅ Mobile navigation elements found!');
-        
-                // Function to handle mobile navigation toggle
-                const handleNavToggle = function(e) {
-          e.preventDefault();
-          e.stopPropagation();
+      // FAQ Dropdown Toggle Functionality
+      const faqQuestions = document.querySelectorAll('.faq-question');
+      faqQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+          const faqItem = question.parentElement;
+          const faqAnswer = faqItem.querySelector('.faq-answer');
+          const faqIcon = question.querySelector('.faq-icon');
+          const isActive = faqItem.classList.contains('active');
           
-                    console.log('🍔 Hamburger clicked!');
-                    console.log('Before toggle - NavLinks has active:', navLinks.classList.contains('active'));
-                    console.log('Before toggle - NavToggle has active:', navToggle.classList.contains('active'));
+          // Close all other FAQ items
+          document.querySelectorAll('.faq-item').forEach(item => {
+            if (item !== faqItem) {
+              item.classList.remove('active');
+              item.querySelector('.faq-icon').textContent = '+';
+            }
+          });
           
-          navLinks.classList.toggle('active');
-                    navToggle.classList.toggle('active');
-                    
-                    console.log('After toggle - NavLinks has active:', navLinks.classList.contains('active'));
-                    console.log('After toggle - NavToggle has active:', navToggle.classList.contains('active'));
-                };
-                
-                // Add both click and touchstart events for mobile compatibility
-                navToggle.addEventListener('click', handleNavToggle);
-                navToggle.addEventListener('touchstart', handleNavToggle);
-                
-                // Ensure proper touch styling for hamburger
-                navToggle.style.touchAction = 'manipulation';
-                navToggle.style.webkitTouchCallout = 'none';
-                navToggle.style.webkitUserSelect = 'none';
-                navToggle.style.userSelect = 'none';
-
-                // Close menu when clicking on a link (but don't interfere with smooth scrolling)
-        navLinks.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', (e) => {
-            console.log('📱 Menu link clicked, closing menu...');
-                        // Don't prevent default here, let the smooth scrolling handler take care of it
-                        // Just close the menu
-            navToggle.classList.remove('active');
-            navLinks.classList.remove('active');
+          // Toggle current FAQ item
+          if (isActive) {
+            faqItem.classList.remove('active');
+            faqIcon.textContent = '+';
+          } else {
+            faqItem.classList.add('active');
+            faqIcon.textContent = '−';
+          }
+        });
+      });
+      
+      // Contact Us Button Handler
+      const contactButtons = document.querySelectorAll('a[href="#contact"]');
+      const contactPopup = document.getElementById('contactPopup');
+      const contactCloseBtn = document.querySelector('.contact-close-btn');
+      
+      if (contactPopup && contactCloseBtn) {
+        // Show popup when Contact Us button is clicked
+        contactButtons.forEach(button => {
+          button.addEventListener('click', (e) => {
+            e.preventDefault();
+            contactPopup.classList.add('active');
+            document.body.style.overflow = 'hidden';
           });
         });
         
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-          if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
-            if (navToggle.classList.contains('active')) {
-              console.log('👆 Clicked outside menu, closing...');
-              navToggle.classList.remove('active');
-              navLinks.classList.remove('active');
-            }
+        // Close popup when close button is clicked
+        contactCloseBtn.addEventListener('click', () => {
+          contactPopup.classList.remove('active');
+          document.body.style.overflow = 'auto';
+        });
+        
+        // Close popup when clicking outside
+        contactPopup.addEventListener('click', (e) => {
+          if (e.target === contactPopup) {
+            contactPopup.classList.remove('active');
+            document.body.style.overflow = 'auto';
           }
         });
-        
-        console.log('✅ Mobile navigation setup complete!');
-      } else {
-        console.error('❌ Mobile navigation elements not found!');
-        console.log('Available elements:', {
-          navToggle: document.getElementById('navToggle'),
-          navLinks: document.getElementById('navLinks')
-        });
       }
-
-            // Success popup event listeners
-            const successPopup = document.getElementById('successPopup');
-            const successCloseBtn = document.querySelector('.success-close-btn');
-
-            function hideSuccessPopup() {
-                const successPopup = document.getElementById('successPopup');
-                successPopup.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
-
-            if (successCloseBtn) {
-                successCloseBtn.addEventListener('click', hideSuccessPopup);
-            }
-
-            if (successPopup) {
-                successPopup.addEventListener('click', function(e) {
-                    if (e.target === successPopup) {
-                        hideSuccessPopup();
-                    }
-                });
-            }
-            
-            // Smooth scrolling for navigation links with mobile touch support
-            const navLinkElements = document.querySelectorAll('.nav-links a[href^="#"]');
-            console.log('🔗 Found navigation links:', navLinkElements.length);
-            navLinkElements.forEach((link, index) => {
-                console.log(`Link ${index}:`, link.getAttribute('href'));
-                
-                // Function to handle navigation with better mobile support
-                const handleNavigation = function(e) {
-                    // Prevent default behavior
-                    if (e.preventDefault) {
-                    e.preventDefault();
-                    }
-                    if (e.stopPropagation) {
-                        e.stopPropagation();
-                    }
-                    
-                    const targetId = this.getAttribute('href');
-                    const targetSection = document.querySelector(targetId);
-                    
-                    console.log('🔗 Navigation link triggered:', targetId);
-                    console.log('🎯 Target section found:', targetSection);
-                    console.log('📱 Event type:', e.type);
-                    
-                    if (targetSection) {
-                        // Close mobile menu first
-                        if (navLinks && navToggle) {
-                            navLinks.classList.remove('active');
-                            navToggle.classList.remove('active');
-                        }
-                        
-                        // Use different scrolling method for mobile with older browser support
-                        setTimeout(() => {
-                            // Try multiple scrolling methods for better compatibility
-                            if (targetSection.scrollIntoView) {
-                                if (browserFeatures.scrollBehavior) {
-                        targetSection.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                                } else {
-                                    // Fallback for browsers without smooth scroll
-                                    targetSection.scrollIntoView();
-                                }
-                            } else {
-                                // Fallback for older browsers without scrollIntoView
-                                const targetTop = targetSection.offsetTop - 80;
-                                if (browserFeatures.scrollBehavior) {
-                                    window.scrollTo({
-                                        top: targetTop,
-                                        behavior: 'smooth'
-                                    });
-                                } else {
-                                    // Manual smooth scroll for very old browsers
-                                    window.scrollTo(0, targetTop);
-                                }
-                            }
-                            console.log('✅ Scrolled to:', targetId);
-                        }, 150);
-                    } else {
-                        console.error('❌ Target section not found:', targetId);
-                        // Let's check what sections actually exist
-                        const allSections = document.querySelectorAll('section[id]');
-                        console.log('Available sections:', Array.from(allSections).map(s => s.id));
-                    }
-                    
-                    return false;
-                };
-                
-                // Add both click and touchstart events for mobile compatibility
-                link.addEventListener('click', handleNavigation);
-                link.addEventListener('touchstart', handleNavigation);
-                
-                // Ensure proper touch styling
-                link.style.touchAction = 'manipulation';
-                link.style.webkitTouchCallout = 'none';
-                link.style.webkitUserSelect = 'none';
-                link.style.userSelect = 'none';
-            });
-
-            // Download the App button functionality with mobile touch support
-            const downloadAppBtn = document.querySelector('a[href="#download-apk"]');
-            console.log('📱 Download App button found:', downloadAppBtn);
-            
-            if (downloadAppBtn) {
-                // Function to handle download app button with better mobile support
-                const handleDownloadApp = function(e) {
-                    // Prevent default behavior
-                    if (e.preventDefault) {
-                        e.preventDefault();
-                    }
-                    if (e.stopPropagation) {
-                        e.stopPropagation();
-                    }
-                    
-                    const targetElement = document.getElementById('download-apk');
-                    console.log('🎯 Download APK target element found:', targetElement);
-                    console.log('📱 Event type:', e.type);
-                    
-                    if (targetElement) {
-                        console.log('✅ Scrolling to download-apk FAQ item...');
-                        
-                        // Scroll to the FAQ section with better mobile support
-                        setTimeout(() => {
-                            // Try multiple scrolling methods for better compatibility
-                            if (targetElement.scrollIntoView) {
-                                if (browserFeatures.scrollBehavior) {
-                                    targetElement.scrollIntoView({
-                                        behavior: 'smooth',
-                                        block: 'start'
-                                    });
-                                } else {
-                                    // Fallback for browsers without smooth scroll
-                                    targetElement.scrollIntoView();
-                                }
-                            } else {
-                                // Fallback for older browsers without scrollIntoView
-                                const targetTop = targetElement.offsetTop - 80;
-                                if (browserFeatures.scrollBehavior) {
-                                    window.scrollTo({
-                                        top: targetTop,
-                                        behavior: 'smooth'
-                                    });
-                                } else {
-                                    // Manual smooth scroll for very old browsers
-                                    window.scrollTo(0, targetTop);
-                                }
-                            }
-                        }, 100);
-                        
-                        // Auto-expand the FAQ item after scrolling
-                        setTimeout(() => {
-                            console.log('🔍 Auto-expanding FAQ item...');
-                            targetElement.classList.add('active');
-                            
-                            // Close other FAQ items
-                            document.querySelectorAll('.faq-item').forEach(item => {
-                                if (item !== targetElement) {
-                                    item.classList.remove('active');
-                                }
-                            });
-                            
-                            console.log('✅ FAQ item expanded and others closed');
-                        }, 600);
-                    } else {
-                        console.error('❌ Download APK target element not found!');
-                        // Check what FAQ items exist
-                        const allFaqItems = document.querySelectorAll('.faq-item');
-                        console.log('Available FAQ items:', Array.from(allFaqItems).map(item => item.id || 'no-id'));
-                    }
-                    
-                    return false;
-                };
-                
-                // Add both click and touchstart events for mobile compatibility
-                downloadAppBtn.addEventListener('click', handleDownloadApp);
-                downloadAppBtn.addEventListener('touchstart', handleDownloadApp);
-                
-                // Ensure proper touch styling
-                downloadAppBtn.style.touchAction = 'manipulation';
-                downloadAppBtn.style.webkitTouchCallout = 'none';
-                downloadAppBtn.style.webkitUserSelect = 'none';
-                downloadAppBtn.style.userSelect = 'none';
-            } else {
-                console.error('❌ Download App button not found!');
-            }
-            
-            // FAQ Toggle functionality
-            const faqItems = document.querySelectorAll('.faq-item');
-            console.log('📋 FAQ items found:', faqItems.length);
-            faqItems.forEach(item => {
-                const question = item.querySelector('.faq-question');
-                const answer = item.querySelector('.faq-answer');
-                const icon = item.querySelector('.faq-icon');
-                
-                console.log('FAQ item:', item.id || 'no-id', 'question:', question, 'answer:', answer, 'icon:', icon);
-                
-                if (question && answer && icon) {
-                    question.addEventListener('click', function() {
-                        const isActive = item.classList.contains('active');
-                        
-                        // Close all other FAQ items
-                        faqItems.forEach(otherItem => {
-                            if (otherItem !== item) {
-                                otherItem.classList.remove('active');
-                                const otherAnswer = otherItem.querySelector('.faq-answer');
-                                const otherIcon = otherItem.querySelector('.faq-icon');
-                                if (otherAnswer && otherIcon) {
-                                    otherAnswer.style.maxHeight = '0px';
-                                    otherIcon.textContent = '+';
-                                }
-                            }
-                        });
-                        
-                        // Toggle current item
-                        if (isActive) {
-                            item.classList.remove('active');
-                            answer.style.maxHeight = '0px';
-                            icon.textContent = '+';
-                        } else {
-                            item.classList.add('active');
-                            // Calculate the actual height needed with extra padding
-                            answer.style.maxHeight = 'none';
-                            const height = answer.scrollHeight + 30; // Add extra 30px for safety
-                            answer.style.maxHeight = '0px';
-                            // Force reflow
-                            answer.offsetHeight;
-                            answer.style.maxHeight = height + 'px';
-                            icon.textContent = '×';
-                        }
-                    });
-                }
-            });
-        });
-        
-        // Smart hamburger menu functionality - Mobile/Desktop with scroll detection
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing smart hamburger menu...');
-            
-            const floatingMenu = document.getElementById('floatingMenu');
-            const navHeroNav = document.querySelector('.nav-hero-nav');
-            
-            if (floatingMenu) {
-                console.log('Floating menu found and ready!');
-                
-                // Check if device is mobile
-                function isMobile() {
-                    return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                }
-                
-                // Show/hide hamburger based on device and scroll position
-                function updateHamburgerVisibility() {
-                    if (isMobile()) {
-                        // Always show on mobile
-                        floatingMenu.style.display = 'flex';
-                        console.log('Mobile device - showing hamburger');
-                    } else {
-                        // Desktop: never show hamburger
-                        floatingMenu.style.display = 'none';
-                        console.log('Desktop - hiding hamburger completely');
-                    }
-                }
-                
-                // Update hamburger appearance based on background
-                function updateHamburgerAppearance() {
-                    const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-                    const aboutSection = document.querySelector('.about-section');
-                    
-                    // Check if we're in white background sections (about section and beyond)
-                    const isInWhiteSection = aboutSection && scrollY >= (aboutSection.offsetTop - 100);
-                    
-                    if (isInWhiteSection) {
-                        // White background sections - orange circular background
-                        floatingMenu.style.background = '#f97316';
-                        floatingMenu.style.border = '2px solid rgba(255, 255, 255, 0.5)';
-                        floatingMenu.style.boxShadow = '0 4px 12px rgba(249, 115, 22, 0.3)';
-                        console.log('White section - orange background at scroll:', scrollY);
-                    } else {
-                        // Orange background sections - orange with 50% opacity
-                        floatingMenu.style.background = 'rgba(249, 115, 22, 0.5)';
-                        floatingMenu.style.border = '2px solid rgba(255, 255, 255, 0.3)';
-                        floatingMenu.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-                        console.log('Orange section - orange background at scroll:', scrollY);
-                    }
-                }
-                
-                // Combined scroll handler
-                function handleScroll() {
-                    updateHamburgerVisibility();
-                    updateHamburgerAppearance();
-                    
-                    // Reposition dropdown if it's open
-                    positionDropdown();
-                }
-                
-                // Function to position dropdown relative to hamburger
-                function positionDropdown() {
-                    const navLinks = document.getElementById('navLinks');
-                    if (navLinks && navLinks.style.display === 'flex') {
-                        const menuRect = floatingMenu.getBoundingClientRect();
-                        
-                        // Position dropdown relative to hamburger
-                        navLinks.style.position = 'fixed';
-                        navLinks.style.top = (menuRect.bottom + 10) + 'px';
-                        navLinks.style.right = '20px';
-                        navLinks.style.zIndex = '10000';
-                        
-                        console.log('Dropdown repositioned at:', navLinks.style.top, 'hamburger at:', menuRect.top);
-                    }
-                }
-                
-                // Add click handler
-                floatingMenu.addEventListener('click', function() {
-                    console.log('Floating menu clicked');
-                    const navLinks = document.getElementById('navLinks');
-                    if (navLinks) {
-                        if (navLinks.style.display === 'flex') {
-                            navLinks.style.display = 'none';
-                        } else {
-                            // Position dropdown relative to hamburger
-                            const menuRect = floatingMenu.getBoundingClientRect();
-                            
-                            navLinks.style.position = 'fixed';
-                            navLinks.style.top = (menuRect.bottom + 10) + 'px';
-                            navLinks.style.right = '20px';
-                            navLinks.style.zIndex = '10000';
-                            navLinks.style.display = 'flex';
-                            
-                            console.log('Dropdown positioned at:', navLinks.style.top, 'hamburger at:', menuRect.top);
-                        }
-                    }
-                });
-                
-                // Listen for scroll and resize events
-                window.addEventListener('scroll', handleScroll);
-                window.addEventListener('resize', handleScroll);
-                
-                // Close dropdown when clicking outside
-                document.addEventListener('click', function(event) {
-                    const navLinks = document.getElementById('navLinks');
-                    if (navLinks && navLinks.style.display === 'flex' && 
-                        !floatingMenu.contains(event.target) && 
-                        !navLinks.contains(event.target)) {
-                        navLinks.style.display = 'none';
-                        console.log('Dropdown closed by clicking outside');
-                    }
-                });
-                
-                // Initial check
-                handleScroll();
-                
-                console.log('Smart hamburger menu functionality initialized');
-            } else {
-                console.error('Floating menu not found!');
-            }
-        });
-    </script>
-    
-    <!-- Contact Form JavaScript -->
-    <script>
-        // Contact Form Functionality - OVERRIDE ALL PREVIOUS VERSIONS
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('OVERRIDE VERSION LOADED - NO EXTERNAL CALLS - TIMESTAMP:', new Date().toISOString());
-            
-            // Force remove any existing event listeners
-            const existingForm = document.getElementById('contactForm');
-            if (existingForm) {
-                const newForm = existingForm.cloneNode(true);
-                existingForm.parentNode.replaceChild(newForm, existingForm);
-                console.log('FORM CLONED AND REPLACED TO REMOVE OLD EVENT LISTENERS');
-            }
-            
-            const contactPopup = document.getElementById('contactPopup');
-            const contactForm = document.getElementById('contactForm');
-            const closeBtn = document.querySelector('.contact-close-btn');
-            const contactMessage = document.getElementById('contactMessage');
-            
-            // Open popup when Contact Us button is clicked
-            document.querySelector('.nav-hero-btn[href="#contact"]')?.addEventListener('click', function(e) {
-                e.preventDefault();
-                contactPopup.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent background scrolling
-            });
-            
-            // Close popup when X is clicked
-            closeBtn.addEventListener('click', closePopup);
-            
-            // Close popup when clicking outside
-            contactPopup.addEventListener('click', function(e) {
-                if (e.target === contactPopup) {
-                    closePopup();
-                }
-            });
-            
-            // Close popup with Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && contactPopup.classList.contains('active')) {
-                    closePopup();
-                }
-            });
-            
-            // Handle form submission
-            const formElement = document.getElementById('contactForm');
-            formElement.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                
-                console.log('Contact form submission started:', new Date().toISOString());
-                
-                const submitBtn = formElement.querySelector('.send-btn');
-                const formData = new FormData(formElement);
-                
-                // Check daily email limit first
-                if (checkEmailLimit()) {
-                    console.log('Daily email limit reached, showing limit message');
-                    contactPopup.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                    showLimitReachedPopup();
-                    return false;
-                }
-                
-                // Disable submit button and show loading
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Sending...';
-                hideMessage();
-                
-                try {
-                    // Prepare form data
-                    const contactData = {
-                        firstName: formData.get('firstName'),
-                        lastName: formData.get('lastName'),
-                        email: formData.get('email'),
-                        subject: formData.get('subject'),
-                        message: formData.get('message')
-                    };
-                    
-                    console.log('Sending contact form data...');
-                    
-                    // Send to Firebase Cloud Function
-                    const response = await fetch('https://sendcontactemail-4hksadkxba-uc.a.run.app', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(contactData)
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (response.ok && result.success) {
-                        // Increment daily email count only on successful send
-                        const newCount = incrementDailyEmailCount();
-                        console.log(`Email sent successfully. Daily count: ${newCount}/${DAILY_EMAIL_LIMIT}`);
-                        
-                        // Close contact popup and show success popup
-                        contactPopup.classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                        showSuccessPopup();
-                        formElement.reset(); // Clear form
-                        console.log('Contact form submitted successfully');
-                    } else {
-                        throw new Error(result.error || 'Failed to send message');
-                    }
-                    
-                } catch (error) {
-                    console.error('Contact form error:', error);
-                    showMessage('Failed to send message. Please try again later or email us directly at accizardlucban@gmail.com', 'error');
-                } finally {
-                    // Re-enable submit button
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Send';
-                }
-                
-                return false; // Prevent any further processing
-            });
-            
-            function closePopup() {
-                contactPopup.classList.remove('active');
-                document.body.style.overflow = 'auto'; // Restore scrolling
-                hideMessage();
-                contactForm.reset(); // Clear form when closing
-            }
-            
-            function showMessage(text, type) {
-                contactMessage.textContent = text;
-                contactMessage.className = `contact-message ${type}`;
-                contactMessage.style.display = 'block';
-            }
-            
-            function hideMessage() {
-                contactMessage.style.display = 'none';
-                contactMessage.className = 'contact-message';
-            }
-
-            // Success popup functionality
-            function showSuccessPopup() {
-                const successPopup = document.getElementById('successPopup');
-                // Reset popup content to success message
-                resetSuccessPopup();
-                successPopup.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-
-        });
-    </script>
+    });
+  </script>
 </body>
 </html>
