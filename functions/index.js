@@ -327,6 +327,43 @@ exports.getNews = onRequest({
 });
 
 /**
+ * DOWNLOAD APK
+ * Streams the APK from Cloud Storage with proper headers so browsers download it directly
+ * Upload file to: gs://<project-bucket>/apk/accizard.apk
+ */
+exports.downloadApk = onRequest({
+  memory: '256MiB',
+  timeoutSeconds: 120,
+  cors: true
+}, async (req, res) => {
+  try {
+    const bucket = getStorage().bucket();
+    const filePath = 'apk/accizard.apk';
+    const file = bucket.file(filePath);
+    const [exists] = await file.exists();
+    if (!exists) {
+      return res.status(404).send('APK not found. Upload to Storage path: ' + filePath);
+    }
+
+    res.set({
+      'Content-Type': 'application/vnd.android.package-archive',
+      'Content-Disposition': 'attachment; filename="Accizard.apk"',
+      'Cache-Control': 'no-store'
+    });
+
+    file.createReadStream()
+      .on('error', (err) => {
+        console.error('APK stream error:', err);
+        try { res.status(500).end('Failed to stream APK'); } catch (_) {}
+      })
+      .pipe(res);
+  } catch (error) {
+    console.error('downloadApk error:', error);
+    res.status(500).send('Internal error');
+  }
+});
+
+/**
  * PROCESS ARTICLES
  * Clean and validate article data from NewsData.io
  * Filter for relevant government, disaster, and political news only

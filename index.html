@@ -106,10 +106,7 @@
         }
       }, true);
     </script>
-    <script async defer crossorigin="anonymous"
-      src="https://connect.facebook.net/en_US/sdk.js"
-      onerror="console.error('❌ Failed to load Facebook SDK')">
-    </script>
+    <!-- Facebook SDK will be injected lazily when the news section enters viewport -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js?v=1"></script>
     
     <!-- Contact Form Configuration -->
@@ -841,9 +838,13 @@ document.addEventListener('DOMContentLoaded', () => {
   <div class="faq-answer">
     You can download the latest version of the Accizard mobile app by clicking the link below. Make sure to enable the “Install from Unknown Sources” option in your device’s settings, which allows your phone to install apps from outside the official app store; this step is required so the installation process can run smoothly without any restrictions.
     <br><br>
-    <a href="accizard.txt" download class="download-link">
+    <!-- Download Button -->
+    <a id="apkDownloadBtn" href="https://drive.google.com/uc?export=download&id=1O_yVk1ddHRe5BtCtO_JMOR0b0EQqDDt4" class="download-link">
       📱 Download Accizard APK
     </a>
+    <div class="apk-install-note" style="margin-top: 10px; color: #5f6a7d; font-size: 0.9rem;">
+      ⚠️ To install this app, please enable ‘Install from Unknown Sources’ in your Android settings.
+    </div>
   </div>
 </div>
     </div>
@@ -856,36 +857,49 @@ document.addEventListener('DOMContentLoaded', () => {
             <h2 class="section-title">Latest News Updates</h2>
             <p class="section-subtitle">Stay informed with the latest updates from MDRRMO Lucban</p>
             
-            <div class="facebook-feed-container">
-                <!-- Facebook Page Feed Embed - Updated Settings -->
-                <!-- Header hidden via CSS to show only timeline posts -->
-                <div class="fb-page-wrapper">
-                    <div class="fb-page"
-                      data-href="https://www.facebook.com/mdrrmolucban"
-                      data-tabs="timeline"
-                      data-width="1400"
-                      data-height="400"
-                      data-small-header="true"
-                      data-adapt-container-width="true"
-                      data-hide-cover="true"
-                      data-show-facepile="false"
-                      data-lazy="false">
-                    </div>
-                    
-                    <!-- Fallback if Facebook embed fails -->
-                    <div id="facebook-fallback" class="facebook-fallback" style="display: none; padding: 40px 20px; text-align: center; background: #f5f5f5; border-radius: 10px; margin-top: 20px;">
-                        <div class="fallback-content">
-                            <h3 style="margin-bottom: 15px; color: #1877f2;">📱 Follow Us on Facebook</h3>
-                            <p style="margin-bottom: 20px; color: #666;">Visit our Facebook page to see the latest news and updates from MDRRMO Lucban.</p>
-                            <a href="https://www.facebook.com/mdrrmolucban" target="_blank" rel="noopener noreferrer" 
-                               style="display: inline-block; padding: 12px 24px; background: #1877f2; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 8px;">
-                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                                </svg>
-                                Visit Facebook Page
-                            </a>
+            <div class="news-row">
+                <div class="news-left">
+                    <div class="news-left-card">
+                        <div class="facebook-feed-container">
+                        <!-- Facebook Page Feed Embed -->
+                        <div class="fb-page-wrapper">
+                            <div class="fb-page"
+                              data-href="https://www.facebook.com/mdrrmolucban"
+                              data-tabs="timeline"
+                              data-width="420"
+                              data-height="400"
+                              data-small-header="true"
+                              data-adapt-container-width="true"
+                              data-hide-cover="true"
+                              data-show-facepile="false"
+                              data-lazy="true">
+                            </div>
+                            
+                            <!-- Fallback if Facebook embed fails -->
+                            <div id="facebook-fallback" class="facebook-fallback" style="display: none; padding: 20px; text-align: center; background: #f5f5f5; border-radius: 10px; margin-top: 20px;">
+                                <div class="fallback-content">
+                                    <h3 style="margin-bottom: 10px; color: #1877f2;">📱 Follow Us on Facebook</h3>
+                                    <p style="margin-bottom: 16px; color: #666;">Visit our Facebook page to see the latest news and updates from MDRRMO Lucban.</p>
+                                    <a href="https://www.facebook.com/mdrrmolucban" target="_blank" rel="noopener noreferrer" 
+                                       style="display: inline-block; padding: 10px 20px; background: #1877f2; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle; margin-right: 8px;">
+                                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                        </svg>
+                                        Visit Facebook Page
+                                    </a>
+                                </div>
+                            </div>
+                            </div>
                         </div>
                     </div>
+                </div>
+                <div class="news-right">
+                    <h3 class="news-follow-title">Follow us on Facebook</h3>
+                    <p class="news-follow-text">Visit our Facebook page to see the latest news and updates from MDRRMO Lucban.</p>
+                    <a class="news-follow-btn" href="https://www.facebook.com/mdrrmolucban" target="_blank" rel="noopener noreferrer">
+                        <span class="fb-icon" aria-hidden="true">f</span>
+                        Visit Facebook Page
+                    </a>
                 </div>
             </div>
         </div>
@@ -947,6 +961,19 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     </div>
 
+    <!-- Download Confirmation Popup -->
+    <div id="downloadPopup" class="download-popup" style="display:none;">
+        <div class="download-popup-content">
+            <h3 class="download-title">Download Accizard APK?</h3>
+            <p class="download-text">This will download the latest APK to your device. Continue?</p>
+            <p id="downloadStatus" class="download-status" style="display:none;">Preparing download…</p>
+            <div class="download-actions">
+                <button id="downloadCancelBtn" class="btn-cancel">Cancel</button>
+                <button id="downloadConfirmBtn" class="btn-primary">Download</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -974,6 +1001,67 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         </div>
     </footer>
+
+    <!-- Lazy-load Facebook SDK when news section is near viewport -->
+    <script>
+      (function() {
+        var sdkLoaded = false;
+        function loadFacebookSDK() {
+          if (sdkLoaded || window.FB) return;
+          sdkLoaded = true;
+          var s = document.createElement('script');
+          s.async = true;
+          s.defer = true;
+          s.crossOrigin = 'anonymous';
+          s.src = 'https://connect.facebook.net/en_US/sdk.js';
+          s.onerror = function() { console.error('❌ Failed to load Facebook SDK'); };
+          document.head.appendChild(s);
+        }
+
+        // Prefer loading only when the news section is visible
+        var newsSection = document.getElementById('news');
+        if (!newsSection) {
+          return; // nothing to do
+        }
+
+        // Define fbAsyncInit before SDK loads
+        window.fbAsyncInit = function() {
+          try {
+            FB.init({ xfbml: true, version: 'v19.0', cookie: false, autoLogAppEvents: false, status: false });
+            // Parse only the fb-page container to avoid extra work
+            var fbContainer = document.querySelector('.fb-page-wrapper');
+            if (window.FB && window.FB.XFBML && fbContainer) {
+              FB.XFBML.parse(fbContainer);
+            } else if (window.FB && window.FB.XFBML) {
+              FB.XFBML.parse();
+            }
+          } catch (e) {
+            console.error('❌ Facebook SDK initialization error:', e);
+          }
+        };
+
+        // IntersectionObserver to trigger load near viewport
+        if ('IntersectionObserver' in window) {
+          var observer = new IntersectionObserver(function(entries, obs) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting) {
+                loadFacebookSDK();
+                obs.disconnect();
+              }
+            });
+          }, { root: null, rootMargin: '200px 0px', threshold: 0.01 });
+          observer.observe(newsSection);
+        } else {
+          // Fallback: load on first user interaction or after delay
+          var loaded = false;
+          var tryLoad = function() { if (!loaded) { loaded = true; loadFacebookSDK(); } };
+          window.addEventListener('scroll', tryLoad, { once: true, passive: true });
+          window.addEventListener('touchstart', tryLoad, { once: true, passive: true });
+          window.addEventListener('mousemove', tryLoad, { once: true });
+          setTimeout(tryLoad, 5000);
+        }
+      })();
+    </script>
 
     <!-- Language Selection Script -->
     <script>
@@ -1030,6 +1118,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     <!-- Daily Email Limit Management Script -->
     <script>
+        // Download confirmation popup wiring
+        document.addEventListener('DOMContentLoaded', function() {
+            var downloadBtn = document.getElementById('apkDownloadBtn');
+            var popup = document.getElementById('downloadPopup');
+            var confirmBtn = document.getElementById('downloadConfirmBtn');
+            var cancelBtn = document.getElementById('downloadCancelBtn');
+            var statusEl = document.getElementById('downloadStatus');
+            if (downloadBtn && popup && confirmBtn && cancelBtn) {
+                downloadBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // reset state
+                    popup.style.display = 'flex';
+                    confirmBtn.classList.remove('is-loading');
+                    confirmBtn.disabled = false;
+                    confirmBtn.textContent = 'Download';
+                    statusEl.style.display = 'none';
+                    statusEl.textContent = 'Preparing download…';
+                });
+                cancelBtn.addEventListener('click', function() {
+                    popup.style.display = 'none';
+                });
+                confirmBtn.addEventListener('click', function() {
+                    // Start loading state and trigger top-level navigation
+                    confirmBtn.classList.add('is-loading');
+                    confirmBtn.disabled = true;
+                    confirmBtn.textContent = 'Starting download…';
+                    statusEl.style.display = 'block';
+                    statusEl.textContent = 'Your download will start now.';
+
+                    var downloadUrl = downloadBtn.href;
+                    // Use top-level navigation so Google Drive completes its redirect chain
+                    window.location.href = downloadUrl; // same-tab navigation
+
+                    // Close popup shortly after starting navigation (in case browser remains on page)
+                    setTimeout(function(){ popup.style.display = 'none'; }, 500);
+                });
+                // Close when clicking outside content
+                popup.addEventListener('click', function(ev) {
+                    if (ev.target === popup) popup.style.display = 'none';
+                });
+            }
+        });
+
         // Daily Email Limit System
         const DAILY_EMAIL_LIMIT = 450;
         
